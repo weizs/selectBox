@@ -3,6 +3,7 @@
 依赖jQuery
 
 ## 结构
+```html
  &lt;div class="select-box"&gt;
      &lt;div class="select-box-inner"&gt;
          &lt;input type="text" class="select-text"&gt;
@@ -18,7 +19,7 @@
     &lt;option value="2"&gt;测试2&lt;/option&gt;
     &lt;option value="3"&gt;测试3&lt;/option&gt;
  &lt;/select&gt;
-
+```
 ## 方法
 
 1.  var select1 = $('#select_id').selectBox()  原生select实例化
