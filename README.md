@@ -22,12 +22,12 @@
 ```
 ## 方法
 
-* var select1 = $('#select_id').selectBox()  原生select实例化
-* var select2 = $('#div_id').selectBox()  div.select-box实例化，值初始化在dl>dd
-* select1.setOptions([{},{},{}])  用于级联操作情况下重置数据
-* select1.val()  得到当前选中对象数据（JSON）
-* select1.val('value')  传入value，设置为当前选中值
-* select1.disable()  禁用select实例
-* select1.enable()  启用select实例
-* select1.destroy()  销毁实例
-* select1.refresh()  恢复select实例初始状态
+* var instance = $('#select_id').selectBox()<br>  原生select实例化
+* var instance = $('#div_id').selectBox()<br>  div.select-box实例化，值初始化在dl>dd
+* instance.setOptions([{},{},{}])<br>  用于级联操作情况下重置数据
+* instance.val()<br>  得到当前选中对象数据（JSON）
+* instance.val('value')<br>  传入value，设置为当前选中值
+* instance.disable()<br>禁用select实例
+* instance.enable()<br>  启用select实例
+* instance.destroy()<br>  销毁实例
+* instance.refresh()<br>  恢复select实例初始状态
