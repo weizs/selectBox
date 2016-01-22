@@ -6,17 +6,55 @@
     <link rel="stylesheet" href="css/select-box.css">
     <script src="//cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.select-box.min.js"></script>
+
+    <style type="text/css">
+        #select1,
+        #select2,
+        #select3 {
+            width: 120px;
+            margin-right: 20px;
+            float: left;
+        }
+    </style>
+
 </head>
 <body>
 
-<select name="test" id="test">
-    <option value="1">测试1</option>
-    <option value="2">测试2</option>
-    <option value="3">测试3测试3测试3</option>
+<select id="select1">
+    <option value="1">测试1-1</option>
+    <option value="2">测试1-2</option>
+    <option value="3">测试1-3</option>
 </select>
 
+<div id="select2">
+    <dl>
+        <dd data-id="1">测试2-1</dd>
+        <dd data-id="2">测试2-2</dd>
+        <dd data-id="3">测试2-3</dd>
+    </dl>
+</div>
+
+<div id="select3"></div>
+
 <script type="text/javascript">
-    $('select').selectBoxs();
+    var change = function (data) {
+        alert('选择了:' + JSON.stringify(data));
+    };
+
+    var instance1 = $('#select1').selectBox({
+        change: change
+    });
+    var instance2 = $('#select2').selectBox({
+        change: change
+    });
+    var instance3 = $('#select3').selectBox({
+        change: change,
+        options: [
+            {text: '测试3-1', id: '1'},
+            {text: '测试3-2', id: '2'},
+            {text: '测试3-3', id: '3'}
+        ]
+    });
 </script>
 
 </body>

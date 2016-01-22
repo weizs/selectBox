@@ -488,16 +488,14 @@
                 this._setOptions(instance, isFilter, hidePlaceholder);
             },
             getMethods: function (instance) {
-                var _self = this,
-                    config = instance.config,
-                    methods = {};
+                var _self = this, config = instance.config, methods = {};
                 /**
                  * 配置
                  * @param config
                  */
                 methods.setConfig = function (config) {
                     $.extend(true, instance.config, config);
-                    _self.refresh();
+                    methods.refresh();
                 };
 
                 /**
