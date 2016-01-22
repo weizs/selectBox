@@ -4,19 +4,25 @@
 
 ## 结构
  &lt;div class="select-box"&gt;
+
      &lt;div class="select-box-inner"&gt;
          &lt;input type="text" class="select-text"&gt;
      &lt;/div&gt;
+
      &lt;dl&gt;
          &lt;dd data-id="1"&gt;测试1&lt;/dd&gt;
          &lt;dd data-id="2"&gt;测试2&lt;/dd&gt;
          &lt;dd data-id="3"&gt;测试3&lt;/dd&gt;
      &lt;/dl&gt;
+
  &lt;/div&gt;
+
  &lt;select class="form-control" name="corp_id" id="corp_id" style="display: none;"&gt;
+
     &lt;option value="1"&gt;测试1&lt;/option&gt;
     &lt;option value="2"&gt;测试2&lt;/option&gt;
     &lt;option value="3"&gt;测试3&lt;/option&gt;
+
  &lt;/select&gt;
 
 ## 方法
