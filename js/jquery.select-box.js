@@ -12,7 +12,7 @@
 
     var cache = {},
         index = 1,
-        tpl = '<div class="select-box"><div class="select-box-inner"><input type="text" class="select-text"></div><dl></dl></div>',
+        tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
         defaults = {
             dataKey: [],     //通过select或者dl>dd进行初始化时，可在option或者dd上增加额外属性，格式为data-[key]，如：“data-corp_id”,会把对应数据存入options对象数组内
             style: {},     //select生成转化后wrap包装内联样式追加
@@ -24,7 +24,8 @@
             options: null,   //纯数据初始化方式，传入对象数组
             combo: false,  //默认普通下拉框，为true时为组合框
             clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
-            hideArrowDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
+            hideArrowOnDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
+            toggleArrowOnOpened: false,  //展开下拉列表时切换箭头，默认不切换
             onInput: null,   //设置combo为true情况下输入内容时回调
             filter: null,   //初始化时过滤options数据，返回过滤后数组
             filtered: null,   //filterData调用完毕回调，返回已过滤数据
@@ -35,7 +36,7 @@
             disabled: false,  //设置初始化时是否禁用
             noBorder: false,  //是否显示显示部分边框
             maxHeight: null,   //是否显示显示部分边框
-            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式
+            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
         },
         proto = {
             init: function (instance) {
@@ -138,7 +139,7 @@
                 if (config.formatter) {
                     text = config.formatter(text);
                 }
-                instance.text.val(text).attr('value', text).show();
+                instance.text.val(text).attr('value', text);
 
                 _self.change(instance, option, oldOption);
                 return true;
@@ -147,7 +148,7 @@
                 var wrap = instance.wrap,
                     config = instance.config;
                 if (wrap) {
-                    if (config.hideArrowDisabled) {
+                    if (config.hideArrowOnDisabled) {
                         wrap.addClass('hide-arrow');
                     }
                     wrap.addClass('disabled');
@@ -160,7 +161,7 @@
                     config = instance.config;
                 if (wrap) {
                     wrap.removeClass('disabled');
-                    if (config.hideArrowDisabled) {
+                    if (config.hideArrowOnDisabled) {
                         wrap.removeClass('hide-arrow');
                     }
                     if (config.combo && config.onInput) {
@@ -201,7 +202,6 @@
                         }
                         //选择后关闭
                         wrap.removeClass('open');
-
                     });
 
                     _self._preventScroll(instance.listWrap);
@@ -235,6 +235,11 @@
                 //初始化
                 var isOrigin = _self._parseOptions(instance, config, options);
 
+                //如果config不存在disabled配置，原生DOM有配置属性，则重新赋值
+                if (isOrigin && typeof config.disabled === 'undefined') {
+                    config.disabled = $node.prop('disabled') || $node.attr('disabled') || $node.attr('readonly');
+                }
+
                 //初始化wrap
                 instance.wrap = _self.createWrap($node, isOrigin || !$node.is('div'), config);
 
@@ -245,9 +250,7 @@
 
                 //设置listWrap样式
                 if (config.maxHeight) {
-                    instance.listWrap.css({
-                        maxHeight: config.maxHeight
-                    });
+                    instance.listWrap.css({maxHeight: config.maxHeight});
                 }
 
                 //初始化text
@@ -283,7 +286,11 @@
                         if (config.autoCopyStyle) {
                             var style = {
                                 width: $node.css('width'),
-                                margin: $node.css('margin'),
+                                marginLeft: $node.css('marginLeft'),
+                                marginRight: $node.css('marginRight'),
+                                marginTop: $node.css('marginTop'),
+                                marginBottom: $node.css('marginBottom'),
+                                display:$node.css('display'),
                                 float: $node.css('float')
                             };
                             config.style = $.extend(true, {}, style, config.style);
@@ -293,9 +300,6 @@
                         $node.before(wrap);
 
                         $node.hide();
-
-                        //如果原生下拉框是禁用状态，复制
-                        config.disabled = $node.prop('disabled') || $node.attr('readonly');
                     }
                 } else {
                     //div样式追加
@@ -303,11 +307,16 @@
                         $node.addClass('select-box');
                     }
                     if (!$node.find('.select-box-inner').length || !$node.find('dl').length) {
-                        $node.html('<div class="select-box-inner"><input type="text" class="select-text"></div><dl></dl>');
+                        $node.html('<div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl>');
                     }
                 }
+
                 if (config.combo) {
                     wrap.addClass('combo');
+                }
+
+                if(config.toggleArrowOnOpened){
+                    wrap.addClass('toggle');
                 }
                 return wrap;
             },
@@ -392,7 +401,7 @@
                 }
 
                 instance.selected = selected;
-                instance.text.val(text).attr('value', text).show();
+                instance.text.val(text).attr('value', text);
             },
             _setOptions: function (instance, isFilter, hidePlaceholder) {
                 var config = instance.config,
@@ -559,7 +568,7 @@
                     if (config.disabled) {
                         config.disabled = false;
                         _self.bindEvent(instance);
-                        if (config.hideArrowDisabled) {
+                        if (config.hideArrowOnDisabled) {
                             instance.wrap.removeClass('hide-arrow');
                         }
                         if (config.combo) {

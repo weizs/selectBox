@@ -1,22 +1,27 @@
 .select-box {
   position: relative;
+  display: inline-block;
   height: 32px;
-  width: 100%;
-  background: #FFF;
   font-size: 14px;
 }
 .select-box * {
   box-sizing: border-box;
 }
 .select-box .select-box-inner {
-  width: 100%;
   position: relative;
+  display: table;
+  width: 100%;
+  height: 100%;
   border: 1px solid #e6e7ec;
   padding: 6px 20px 6px 6px;
   cursor: pointer;
 }
+.select-box .select-box-inner .v-align {
+  display: table-cell;
+  vertical-align: middle;
+}
 .select-box .select-box-inner:before {
-  content: "";
+  content: '';
   display: block;
   border: 5px solid transparent;
   border-top-color: #a0a0a0;
@@ -27,14 +32,14 @@
   z-index: 2;
 }
 .select-box .select-box-inner:after {
-  content: "";
+  position: absolute;
+  content: '';
   display: block;
   width: 100%;
-  top: 0;
-  position: absolute;
   height: 100%;
-  background-color: transparent;
+  top: 0;
   right: 0;
+  background-color: transparent;
   z-index: 1;
 }
 .select-box .select-box-inner:hover {
@@ -48,14 +53,19 @@
   border-top-color: #787878;
 }
 .select-box .select-box-inner input.select-text {
-  border: none;
   width: 100%;
   background: transparent;
   cursor: pointer;
   color: #333;
-  font-size: 14px;
-  line-height: normal;
+  vertical-align: middle;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  border: none;
   outline: none;
+}
+.select-box .select-box-inner input.select-text::-ms-clear {
+  display: none;
 }
 .select-box.combo .select-box-inner:after {
   width: 20px;
@@ -99,7 +109,7 @@
   cursor: default;
   border: 1px solid #dadbe0;
 }
-.select-box.disabled .select-box-inner .select-text {
+.select-box.disabled .select-box-inner input.select-text {
   cursor: default;
   color: #a5a6aa;
 }
@@ -109,7 +119,7 @@
 .select-box.disabled .select-box-inner:hover:before {
   border-top-color: #a0a0a0;
 }
-.select-box.disabled .select-box-inner:hover .select-text {
+.select-box.disabled .select-box-inner:hover input.select-text {
   color: #a5a6aa;
 }
 .select-box.disabled.hide-arrow .select-box-inner {
@@ -121,6 +131,22 @@
 }
 .select-box.open dl {
   display: block;
+}
+.select-box.open.toggle .select-box-inner:before {
+  border-top-color: transparent;
+  border-bottom-color: #a0a0a0;
+  top: 50%;
+  margin-top: -8px;
+}
+.select-box.open.toggle .select-box-inner:hover:before {
+  border-bottom-color: #787878;
+}
+.select-box:before,
+.select-box:after {
+  content: '';
+  display: block;
+  clear: both;
+  overflow: hidden;
 }
 select.origin-select {
   visibility: hidden;

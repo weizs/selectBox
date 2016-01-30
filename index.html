@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/select-box.css">
-    <script src="http://cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.select-box.min.js"></script>
 
     <style type="text/css">
@@ -35,6 +35,7 @@
 </div>
 
 <div id="select3"></div>
+<div id="select4" style="margin-left: 20px;"></div>
 
 <script type="text/javascript">
     var change = function (data) {
@@ -53,6 +54,17 @@
             {text: '测试3-1', id: '1'},
             {text: '测试3-2', id: '2'},
             {text: '测试3-3', id: '3'}
+        ]
+    });
+
+    var instance4 = $('#select4').selectBox({
+        change: change,
+        toggleArrowOnOpened: true,
+        combo: true,
+        options: [
+            {text: '测试4-1 长文本测试 长文本测试 长文本测试', id: '1'},
+            {text: '测试4-2', id: '2'},
+            {text: '测试4-3', id: '3'}
         ]
     });
 </script>
