@@ -3,16 +3,17 @@
 依赖jQuery，兼容IE8+ & 其他浏览器
 
 ## 结构
-```html
-1、纯原生Select
 
+1.  纯原生Select
+```html
 <select id="select_id" style="display: none;">
     <option value="1">测试1</option>
     <option value="2">测试2</option>
     <option value="3">测试3</option>
  </select>
- 
- 2、div+dl>dd
+ ```
+ 2.  div+dl>dd
+ ```html
  <div id="div_id">
      <div class="select-box-inner">
          <input type="text" class="select-text">
@@ -23,11 +24,13 @@
          <dd data-id="3">测试3</dd>
      </dl>
  </div>
- 
- 3、纯div，jsAPI初始化数据
+ ```
+ 3.  纯div，jsAPI初始化数据
+ ```html
  <div id="div_id"></div>
- 
+ ```
  实例化后DOM结构如下
+ ```html
  <div class="select-box" id="div_id">
      <div class="select-box-inner">
          <input type="text" class="select-text">
