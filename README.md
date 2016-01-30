@@ -5,6 +5,7 @@
 ## 结构
 
 1.  纯原生Select
+
 ```html
 <select id="select_id" style="display: none;">
     <option value="1">测试1</option>
@@ -12,7 +13,9 @@
     <option value="3">测试3</option>
  </select>
  ```
+ 
  2.  div+dl>dd
+ 
  ```html
  <div id="div_id">
      <div class="select-box-inner">
@@ -25,11 +28,15 @@
      </dl>
  </div>
  ```
+ 
  3.  纯div，jsAPI初始化数据
+ 
  ```html
  <div id="div_id"></div>
  ```
+ 
  实例化后DOM结构如下
+ 
  ```html
  <div class="select-box" id="div_id">
      <div class="select-box-inner">
@@ -47,6 +54,7 @@
     <option value="3">测试3</option>
  </select>
 ```
+
 ## 方法
 
 * var instance = $('#select_id').selectBox()<br>  原生select实例化
