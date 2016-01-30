@@ -11,48 +11,48 @@
     <option value="1">测试1</option>
     <option value="2">测试2</option>
     <option value="3">测试3</option>
- </select>
- ```
+</select>
+```
  
  2.  div+dl>dd
  
- ```html
- <div id="div_id">
-     <div class="select-box-inner">
-         <input type="text" class="select-text">
-     </div>
-     <dl>
-         <dd data-id="1">测试1</dd>
-         <dd data-id="2">测试2</dd>
-         <dd data-id="3">测试3</dd>
-     </dl>
- </div>
- ```
+```html
+<div id="div_id">
+    <div class="select-box-inner">
+    <input type="text" class="select-text">
+    </div>
+    <dl>
+        <dd data-id="1">测试1</dd>
+        <dd data-id="2">测试2</dd>
+        <dd data-id="3">测试3</dd>
+    </dl>
+</div>
+```
  
  3.  纯div，jsAPI初始化数据
  
- ```html
- <div id="div_id"></div>
- ```
+```html
+<div id="div_id"></div>
+```
  
  实例化后DOM结构如下
  
- ```html
- <div class="select-box" id="div_id">
+```html
+<div class="select-box" id="div_id">
      <div class="select-box-inner">
          <input type="text" class="select-text">
      </div>
-     <dl>
-         <dd data-id="1">测试1</dd>
-         <dd data-id="2">测试2</dd>
-         <dd data-id="3">测试3</dd>
-     </dl>
- </div>
- <select id="select_id" style="display: none;">
+ <dl>
+     <dd data-id="1">测试1</dd>
+     <dd data-id="2">测试2</dd>
+     <dd data-id="3">测试3</dd>
+ </dl>
+</div>
+<select id="select_id" style="display: none;">
     <option value="1">测试1</option>
     <option value="2">测试2</option>
     <option value="3">测试3</option>
- </select>
+</select>
 ```
 
 ## 方法
