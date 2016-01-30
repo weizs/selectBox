@@ -10,33 +10,33 @@
 (function ($) {
     'use strict';
 
-    var publicCache = {},
+    var cache = {},
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><input type="text" class="select-text"></div><dl></dl></div>',
         defaults = {
-            dataKey           : [],     //通过select或者dl>dd进行初始化时，可在option或者dd上增加额外属性，格式为data-[key]，如：“data-corp_id”,会把对应数据存入options对象数组内
-            style             : {},     //select生成转化后wrap包装内联样式追加
-            keys              : {
-                text          : 'text', //select text属性，可根据数据自行修改，默认通过dom创建的情况无需修改
-                value         : 'id'    //select value属性，可根据数据自行修改，默认通过dom创建的情况无需修改
+            dataKey: [],     //通过select或者dl>dd进行初始化时，可在option或者dd上增加额外属性，格式为data-[key]，如：“data-corp_id”,会把对应数据存入options对象数组内
+            style: {},     //select生成转化后wrap包装内联样式追加
+            keys: {
+                text: 'text', //select text属性，可根据数据自行修改，默认通过dom创建的情况无需修改
+                value: 'id'    //select value属性，可根据数据自行修改，默认通过dom创建的情况无需修改
             },
-            placeholder       : null,   //选中项为空时显示文本，如："请选择"
-            options           : null,   //纯数据初始化方式，传入对象数组
-            combo             : false,  //默认普通下拉框，为true时为组合框
-            clearTextOnFocus  : false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
-            hideArrowDisabled : false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
-            onInput           : null,   //设置combo为true情况下输入内容时回调
-            filter            : null,   //初始化时过滤options数据，返回过滤后数组
-            filtered          : null,   //filterData调用完毕回调，返回已过滤数据
-            filterItem        : null,   //输出options时依次过滤每个节点数据
-            formatter         : null,   //输出options时格式化text内容
-            create            : null,   //创建完成后回调
-            change            : null,   //change事件，改变选中值时回调
-            disabled          : false,  //设置初始化时是否禁用
-            noBorder          : false,  //是否显示显示部分边框
-            maxHeight         : null,   //是否显示显示部分边框
-            autoCopyStyle     : true    //原生select作为源的时候，自动扫描默认样式
-            },
+            placeholder: null,   //选中项为空时显示文本，如："请选择"
+            options: null,   //纯数据初始化方式，传入对象数组
+            combo: false,  //默认普通下拉框，为true时为组合框
+            clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
+            hideArrowDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
+            onInput: null,   //设置combo为true情况下输入内容时回调
+            filter: null,   //初始化时过滤options数据，返回过滤后数组
+            filtered: null,   //filterData调用完毕回调，返回已过滤数据
+            filterItem: null,   //输出options时依次过滤每个节点数据
+            formatter: null,   //输出options时格式化text内容
+            create: null,   //创建完成后回调
+            change: null,   //change事件，改变选中值时回调
+            disabled: false,  //设置初始化时是否禁用
+            noBorder: false,  //是否显示显示部分边框
+            maxHeight: null,   //是否显示显示部分边框
+            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式
+        },
         proto = {
             init: function (instance) {
                 var _self = this,
@@ -173,10 +173,10 @@
                         if (wrap.hasClass('open')) {
                             wrap.removeClass('open');
                         } else {
-                            if (publicCache.wrap) {
-                                publicCache.wrap.removeClass('open');
+                            if (cache.wrap) {
+                                cache.wrap.removeClass('open');
                             }
-                            publicCache.wrap = instance.wrap;
+                            cache.wrap = instance.wrap;
 
                             if (config.filterItem) {
                                 _self._setOptions(instance);
@@ -206,8 +206,8 @@
 
                     _self._preventScroll(instance.listWrap);
 
-                    if (!publicCache.selectEventProxy) {
-                        publicCache.selectEventProxy = true;
+                    if (!cache.selectEventProxy) {
+                        cache.selectEventProxy = true;
                         $(document).on('click', function (e) {
                             var target = $(e.target);
                             if (!target.is('.select-box') && !target.closest('.select-box').length) {
@@ -578,7 +578,7 @@
                         instance.wrap.next().css('visibility', 'visible').show();
                         instance.wrap.remove();
                     }
-                    delete publicCache[boxId];
+                    delete cache[boxId];
                 };
                 return methods;
             }
@@ -594,12 +594,12 @@
             //暂时仅支持单选择器创建
             var node = this.eq(0),
                 boxId = proto.getBoxId(node);
-            if (publicCache[boxId]) {
-                publicCache[boxId].setConfig(config);
+            if (cache[boxId]) {
+                cache[boxId].setConfig(config);
             } else {
-                publicCache[boxId] = new SelectBox(node, config);
+                cache[boxId] = new SelectBox(node, config);
             }
-            return publicCache[boxId];
+            return cache[boxId];
         },
         /**
          * config

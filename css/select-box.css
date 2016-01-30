@@ -1,5 +1,4 @@
 .select-box {
-  line-height: normal;
   position: relative;
   height: 32px;
   width: 100%;
@@ -42,18 +41,21 @@
   background: #e6e7ec;
   border: 1px solid #dadbe0;
 }
-.select-box .select-box-inner:hover .select-text {
-  color: #111111;
+.select-box .select-box-inner:hover input.select-text {
+  color: #111;
 }
 .select-box .select-box-inner:hover:before {
   border-top-color: #787878;
 }
-.select-box .select-box-inner .select-text {
+.select-box .select-box-inner input.select-text {
   border: none;
   width: 100%;
   background: transparent;
   cursor: pointer;
-  color: #333333;
+  color: #333;
+  font-size: 14px;
+  line-height: normal;
+  outline: none;
 }
 .select-box.combo .select-box-inner:after {
   width: 20px;
@@ -83,8 +85,7 @@
   cursor: pointer;
   -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;
-      user-select: none;
+  user-select: none;
   margin: 0;
 }
 .select-box dl dd:hover,

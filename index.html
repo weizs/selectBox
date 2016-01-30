@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/select-box.css">
-    <script src="//cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.select-box.min.js"></script>
 
     <style type="text/css">
@@ -12,7 +12,7 @@
         #select2,
         #select3 {
             width: 120px;
-            margin-right: 20px;
+            margin-left: 20px;
             float: left;
         }
     </style>
@@ -38,7 +38,7 @@
 
 <script type="text/javascript">
     var change = function (data) {
-        alert('选择了:' + JSON.stringify(data));
+        console.log('选择了',data);
     };
 
     var instance1 = $('#select1').selectBox({

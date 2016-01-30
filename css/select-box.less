@@ -10,13 +10,16 @@
 @select-text-disabled:#a5a6aa;
 //下拉框箭头样式
 @select-arrow:#a0a0a0;
+//整个下拉框字体大小
+@select-font-size:14px;
+//整个下拉框高度
+@select-box-height:32px;
 .select-box {
-  line-height: normal;
   position: relative;
-  height: 32px;
+  height: @select-box-height;
   width: 100%;
   background: #FFF;
-  font-size: 14px;
+  font-size: @select-font-size;
   * {box-sizing: border-box;}
   .select-box-inner { width: 100%; position: relative; border: 1px solid @select-box-border; padding: 6px 20px 6px 6px;cursor: pointer;
     &:before { content: ""; display: block; border:5px solid transparent; border-top-color: @select-arrow;position: absolute;right: 6px;top: 50%;margin-top: -2px;z-index: 2;}
@@ -24,10 +27,10 @@
     &:hover {
       background: #e6e7ec;
       border: 1px solid @select-box-border-highlight;
-      .select-text { color: @select-text-hover;}
+      input.select-text { color: @select-text-hover;}
       &:before { border-top-color: #787878;}
     }
-    .select-text { border: none; width: 100%; background: transparent; cursor: pointer; color: @select-text;}
+    input.select-text { border: none; width: 100%; background: transparent; cursor: pointer; color: @select-text;font-size: @select-font-size; line-height: normal;outline: none;}
   }
   &.combo {
     .select-box-inner {

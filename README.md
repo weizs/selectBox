@@ -1,6 +1,6 @@
 # selectBox
 
-依赖jQuery
+依赖jQuery，兼容IE8+ & 其他浏览器
 
 ## 结构
 ```html
