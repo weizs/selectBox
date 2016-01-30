@@ -7,8 +7,7 @@
  * Released under the MIT license
  * Date: 2016-01-22
  */
-
-(function ($) {
+;(function ($) {
     'use strict';
     var cache = {},
         index = 1,
