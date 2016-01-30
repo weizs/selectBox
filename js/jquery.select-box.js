@@ -290,7 +290,7 @@
                                 marginRight: $node.css('marginRight'),
                                 marginTop: $node.css('marginTop'),
                                 marginBottom: $node.css('marginBottom'),
-                                display:$node.css('display'),
+                                display: $node.css('display'),
                                 float: $node.css('float')
                             };
                             config.style = $.extend(true, {}, style, config.style);
@@ -315,7 +315,7 @@
                     wrap.addClass('combo');
                 }
 
-                if(config.toggleArrowOnOpened){
+                if (config.toggleArrowOnOpened) {
                     wrap.addClass('toggle');
                 }
                 return wrap;
@@ -460,14 +460,16 @@
                         }
                     }
                 }
+
                 return optionHtml.join('');
             },
             _preventScroll: function (dom) {
-                if (dom.jquery) {
-                    dom = dom.get(0);
-                }
-                if (!dom.getAttribute('data-mouse-wheel')) {
-                    dom.setAttribute('data-mouse-wheel', 'bind');
+                var $dom = dom.jquery ? dom : $(dom);
+                dom = $dom.get(0);
+
+                if (!$dom.data('mouse-wheel')) {
+                    $dom.attr('data-mouse-wheel', 1);
+
                     if (navigator.userAgent.indexOf('Firefox') >= 0) {   //firefox
                         dom.addEventListener('DOMMouseScroll', function (e) {
                             dom.scrollTop += e.detail > 0 ? 60 : -60;
