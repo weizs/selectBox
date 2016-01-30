@@ -10,7 +10,6 @@
 
 (function ($) {
     'use strict';
-
     var cache = {},
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
