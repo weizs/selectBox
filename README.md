@@ -2,9 +2,12 @@
 
 依赖jQuery，兼容IE8+ & 其他浏览器
 
+![image](https://raw.githubusercontent.com/weizhansheng/selectBox/master/select-box.png)
+
+
 ## 结构
 
-1.  纯原生Select
+1.纯原生Select
 
 ```html
 <select id="select_id" style="display: none;">
@@ -14,7 +17,7 @@
 </select>
 ```
  
- 2.  div+dl>dd
+ 2.div+dl>dd
  
 ```html
 <div id="div_id">
@@ -29,7 +32,7 @@
 </div>
 ```
  
- 3.  纯div，jsAPI初始化数据
+ 3.纯div，jsAPI初始化数据
  
 ```html
 <div id="div_id"></div>
