@@ -3,6 +3,7 @@
  * 通过原生select或者使用数据生成自定义下拉(组合)框
  * PS:采用原生select生成时建议实现设置visibility:hidden
  * http://www.poorren.com/jquery-select-box-plugin
+ * https://github.com/weizhansheng/selectBox
  * Released under the MIT license
  * Date: 2016-01-22
  */
