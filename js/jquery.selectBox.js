@@ -7,9 +7,12 @@
  * Released under the MIT license
  * Date: 2016-01-22
  */
+/*global jQuery*/
 ;(function ($) {
     'use strict';
-    var cache = window.cache = {},
+    var cache = {},
+        noop = function () {
+        },
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
         defaults = {
@@ -212,10 +215,9 @@
                     if (!cache.doc) {
                         cache.doc = $(document).on('click', function (e) {
                             var target = $(e.target);
-                            !target.is('.select-box')
-                            && !target.closest('.select-box').length
-                            && cache.wrap
-                            && cache.wrap.removeClass('open');
+                            if (!target.is('.select-box') && !target.closest('.select-box').length && cache.wrap) {
+                                cache.wrap.removeClass('open');
+                            }
                         });
                     }
                 }
@@ -681,9 +683,7 @@
                 config = args.shift();
 
             if ($.type(config) === 'string') {
-                var callback = $.type(args[args.length - 1]) === 'function' ? args.pop() : function () {
-                };
-
+                var callback = $.type(args[args.length - 1]) === 'function' ? args.pop() : noop;
                 return this.each(function () {
                     var instance = $(this).selectBox();
                     if (instance && instance[config]) {
