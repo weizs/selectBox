@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>SelectBox</title>
-    <link rel="stylesheet" href="https://raw.githubusercontent.com/weizhansheng/selectBox/master/css/selectBox.min.css">
-    <script type="text/javascript" src="https://raw.githubusercontent.com/weizhansheng/selectBox/master/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://raw.githubusercontent.com/weizhansheng/selectBox/master/js/jquery.selectBox.min.js"></script>
+    <link rel="stylesheet" href="css/selectBox.min.css">
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 
     <style type="text/css">
         body {
-            background: #e6e7ec;
+            background: #e7e7eb;
+        }
+        .wrap>div {
+            padding: 15px;
+            border-radius: 5px;
+            background: #FFF;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
         }
         .select {
+            visibility: hidden;
             width: 160px;
             margin-left: 20px;
             margin-top: 5px;
             background: #FFF;
-            visibility: hidden;
         }
     </style>
 
 </head>
 <body>
 
-<div>
+<div class="wrap">
     <div>
         1、原生select初始化<br>
         <select id="select1" class="select">
