@@ -287,7 +287,7 @@
                                 var val = $node.css(name);
                                 if (val) {
                                     style[name] = val;
-                                } else if ($.inArray(name, styleNeedSuffix)>-1) {
+                                } else if ($.inArray(name, styleNeedSuffix) > -1) {
                                     $.each(styleSuffix, function (i, suffix) {
                                         style[name + suffix] = $node.css(name + suffix);
                                     });
@@ -461,6 +461,10 @@
 
                 if (config.filtered) {
                     config.filtered.call(instance, options);
+                }
+                //如果visibility不是visible，设置为visible
+                if (instance.wrap.css('visibility') !== 'visible') {
+                    instance.wrap.css('visibility', 'visible');
                 }
             },
             _getOptionHtml: function (option, keys, index, groupIndex) {
