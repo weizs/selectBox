@@ -1,100 +1,162 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
-    <title>Selectbox by weizhansheng</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Selectbox</h1>
-      <h2 class="project-tagline">SelectBox</h2>
-      <a href="https://github.com/weizhansheng/selectBox" class="btn">View on GitHub</a>
-      <a href="https://github.com/weizhansheng/selectBox/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/weizhansheng/selectBox/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <title>SelectBox</title>
+    <link rel="stylesheet" href="css/selectBox.min.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 
-    <section class="main-content">
-      <h1>
-<a id="selectbox" class="anchor" href="#selectbox" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>selectBox</h1>
+    <style type="text/css">
+        #select1,
+        #select2,
+        #select3,
+        #select5,
+        #select6,
+        #select7 {
+            width: 120px;
+            margin-left: 20px;
+            float: left;
+        }
+    </style>
 
-<p>依赖jQuery，兼容IE8+ &amp; 其他浏览器</p>
+</head>
+<body>
 
-<p><img src="https://raw.githubusercontent.com/weizhansheng/selectBox/master/select-box.png" alt="image"></p>
+<div>
+    <select id="select1">
+        <option value="1">测试1-1</option>
+        <option value="2">测试1-2</option>
+        <option value="3">测试1-3</option>
+    </select>
 
-<h2>
-<a id="结构" class="anchor" href="#%E7%BB%93%E6%9E%84" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>结构</h2>
+    <div id="select2">
+        <dl>
+            <dd data-id="1">测试2-1</dd>
+            <dd data-id="2">测试2-2</dd>
+            <dd data-id="3">测试2-3</dd>
+        </dl>
+    </div>
 
-<p>1.纯原生Select</p>
+    <div id="select3"></div>
+    <div id="select4" style="margin-left: 20px;"></div>
+</div>
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">select</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>select_id<span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display: none;<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>&gt;测试1&lt;/<span class="pl-ent">option</span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span>&gt;测试2&lt;/<span class="pl-ent">option</span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>&gt;测试3&lt;/<span class="pl-ent">option</span>&gt;
-&lt;/<span class="pl-ent">select</span>&gt;</pre></div>
+<div>
+    <select id="select5">
+        <optgroup label="测试1">
+            <option value="1">测试1-1</option>
+            <option value="2">测试1-2</option>
+            <option value="3">测试1-3</option>
+        </optgroup>
+        <optgroup label="测试11">
+            <option value="11-1">测试11-1</option>
+            <option value="11-2">测试11-2</option>
+            <option value="11-3">测试11-3</option>
+        </optgroup>
+    </select>
 
-<p>2.div+dl&gt;dd</p>
+    <div id="select6">
+        <dl data-label="测试1">
+            <dd data-id="1">测试2-1</dd>
+            <dd data-id="2">测试2-2</dd>
+            <dd data-id="3">测试2-3</dd>
+        </dl>
+        <dl data-label="测试21">
+            <dd data-id="11-1">测试21-1</dd>
+            <dd data-id="11-2">测试21-2</dd>
+            <dd data-id="11-3">测试21-3</dd>
+        </dl>
+    </div>
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>div_id<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>select-box-inner<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>select-text<span class="pl-pds">"</span></span>&gt;
-    &lt;/<span class="pl-ent">div</span>&gt;
-    &lt;<span class="pl-ent">dl</span>&gt;
-        &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>&gt;测试1&lt;/<span class="pl-ent">dd</span>&gt;
-        &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span>&gt;测试2&lt;/<span class="pl-ent">dd</span>&gt;
-        &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>&gt;测试3&lt;/<span class="pl-ent">dd</span>&gt;
-    &lt;/<span class="pl-ent">dl</span>&gt;
-&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
+    <div id="select7"></div>
+    <div id="select8" style="margin-left: 20px;"></div>
+</div>
 
-<p>3.纯div，jsAPI初始化数据</p>
+<script type="text/javascript">
+    var change = function (data) {
+        console.log('selected:',data);
+    };
+    var instance1 = $('#select1').selectBox({
+        change: change
+    });
+    var instance2 = $('#select2').selectBox({
+        change: change
+    });
+    var instance3 = $('#select3').selectBox({
+        change: change,
+        options: [
+            {text: '测试3-1', id: '1'},
+            {text: '测试3-2', id: '2'},
+            {text: '测试3-3', id: '3'}
+        ]
+    });
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>div_id<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
+    var instance4 = $('#select4').selectBox({
+        change: change,
+        toggleArrowOnOpened: true,
+        combo: true,
+        options: [
+            {text: '测试4-1 长文本测试 长文本测试 长文本测试', id: '1'},
+            {text: '测试4-2', id: '2'},
+            {text: '测试4-3', id: '3'}
+        ]
+    });
 
-<p>实例化后DOM结构如下</p>
+    var instance5 = $('#select5').selectBox({
+        change: change
+    });
 
-<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>select-box<span class="pl-pds">"</span></span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>div_id<span class="pl-pds">"</span></span>&gt;
-     &lt;<span class="pl-ent">div</span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>select-box-inner<span class="pl-pds">"</span></span>&gt;
-         &lt;<span class="pl-ent">input</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text<span class="pl-pds">"</span></span> <span class="pl-e">class</span>=<span class="pl-s"><span class="pl-pds">"</span>select-text<span class="pl-pds">"</span></span>&gt;
-     &lt;/<span class="pl-ent">div</span>&gt;
- &lt;<span class="pl-ent">dl</span>&gt;
-     &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>&gt;测试1&lt;/<span class="pl-ent">dd</span>&gt;
-     &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span>&gt;测试2&lt;/<span class="pl-ent">dd</span>&gt;
-     &lt;<span class="pl-ent">dd</span> <span class="pl-e">data-id</span>=<span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>&gt;测试3&lt;/<span class="pl-ent">dd</span>&gt;
- &lt;/<span class="pl-ent">dl</span>&gt;
-&lt;/<span class="pl-ent">div</span>&gt;
-&lt;<span class="pl-ent">select</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>select_id<span class="pl-pds">"</span></span> <span class="pl-e">style</span>=<span class="pl-s"><span class="pl-pds">"</span>display: none;<span class="pl-pds">"</span></span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>&gt;测试1&lt;/<span class="pl-ent">option</span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>2<span class="pl-pds">"</span></span>&gt;测试2&lt;/<span class="pl-ent">option</span>&gt;
-    &lt;<span class="pl-ent">option</span> <span class="pl-e">value</span>=<span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>&gt;测试3&lt;/<span class="pl-ent">option</span>&gt;
-&lt;/<span class="pl-ent">select</span>&gt;</pre></div>
+    var instance6 = $('#select6').selectBox({
+        change: change
+    });
 
-<h2>
-<a id="方法" class="anchor" href="#%E6%96%B9%E6%B3%95" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>方法</h2>
+    var instance7 = $('#select7').selectBox({
+        change: change,
+        options: [
+            {
+                label:'分组1',
+                options:[
+                    {text: '测试3-1', id: '1'},
+                    {text: '测试3-2', id: '2'},
+                    {text: '测试3-3', id: '3'}
+                ]
+            },
+            {
+                label:'分组31',
+                options:[
+                    {text: '测试31-1', id: '31-1'},
+                    {text: '测试31-2', id: '31-2'},
+                    {text: '测试31-3', id: '31-3'}
+                ]
+            }
+        ]
+    });
 
-<ul>
-<li>var instance = $('#select_id').selectBox()<br>  原生select实例化</li>
-<li>var instance = $('#div_id').selectBox()<br>  div.select-box实例化，值初始化在dl&gt;dd</li>
-<li>instance.setOptions([{},{},{}])<br>  用于级联操作情况下重置数据</li>
-<li>instance.val()<br>  得到当前选中对象数据（JSON）</li>
-<li>instance.val('value')<br>  传入value，设置为当前选中值</li>
-<li>instance.disable()<br>  禁用select实例</li>
-<li>instance.enable()<br>  启用select实例</li>
-<li>instance.destroy()<br>  销毁实例</li>
-<li>instance.refresh()<br>  恢复select实例初始状态</li>
-</ul>
+    var instance8 = $('#select8').selectBox({
+        change: change,
+        toggleArrowOnOpened: true,
+        combo: true,
+        options: [
+            {
+                label:'分组1',
+                options:[
+                    {text: '测试4-1', id: '1'},
+                    {text: '测试4-2', id: '2'},
+                    {text: '测试4-3', id: '3'}
+                ]
+            },
+            {
+                label:'分组31',
+                options:[
+                    {text: '测试41-1', id: '41-1'},
+                    {text: '测试41-2', id: '41-2'},
+                    {text: '测试41-3', id: '41-3'}
+                ]
+            }
+        ]
+    });
+</script>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/weizhansheng/selectBox">Selectbox</a> is maintained by <a href="https://github.com/weizhansheng">weizhansheng</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
-  </body>
+</body>
 </html>
