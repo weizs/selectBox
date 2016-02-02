@@ -212,13 +212,13 @@
 
                     _self._preventScroll(instance.listWrap);
 
-                    if (!cache.selectEventProxy) {
-                        cache.selectEventProxy = true;
-                        $(document).on('click', function (e) {
+                    if (!cache.doc) {
+                        cache.doc = $(document).on('click', function (e) {
                             var target = $(e.target);
-                            if (!target.is('.select-box') && !target.closest('.select-box').length) {
-                                $('.select-box').removeClass('open');
-                            }
+                            !target.is('.select-box')
+                            && !target.closest('.select-box').length
+                            && cache.wrap
+                            && cache.wrap.removeClass('open');
                         });
                     }
                 }
