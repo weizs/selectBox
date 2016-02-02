@@ -119,7 +119,7 @@
                 var _self = this,
                     config = instance.config,
                     isGroup = config.isGroup,
-                    options = isGroup ? config.options : [config.options],
+                    options = isGroup ? config.options : [{options: config.options}],
                     text = selected.text(),
                     groupIndex = selected.data('group-index'),
                     index = selected.data('select-index'),
@@ -342,7 +342,7 @@
 
                 //如果没有options，扫描dom生成options
                 if (options.length) {
-                    isGroup = options[0].label && !options[0][keys.text] && !options[0][keys.value];
+                    isGroup = !!options[0].label && !options[0][keys.text] && !options[0][keys.value];
                 } else {
                     if ($node.is('select')) {
                         $node.css('visibility', 'hidden');
