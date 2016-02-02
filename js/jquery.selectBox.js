@@ -13,6 +13,9 @@
     var cache = {},
         noop = function () {
         },
+        styleNeedSuffix = ['margin', 'padding'],
+        styleSuffix = ['Left', 'Right', 'Top', 'Bottom'],
+        autoCopyStyle = ['float', 'display', 'margin', 'width'],
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
         defaults = {
@@ -38,27 +41,19 @@
             disabled: false,  //设置初始化时是否禁用
             noBorder: false,  //是否显示显示部分边框
             maxHeight: null,   //是否显示显示部分边框
-            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width','background']
+            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
         },
         proto = {
             init: function (instance) {
-                var _self = this,
-                    config = instance.config,
-                    create = config.create;
-
+                var _self = this, create = instance.config.create;
                 //创建
                 _self.create(instance);
-                //移除事件
-                _self.unbindEvent(instance);
-
-                if (!config.disabled) {
-                    _self.bindEvent(instance);
-                }
-
+                //绑定事件
+                _self.bindEvent(instance);
+                //创建完成回调
                 if (create && typeof create === 'function') {
                     create.call(instance, _self.getSelected(instance));
                 }
-
                 //返回methods
                 return _self.getMethods(instance);
             },
@@ -129,7 +124,7 @@
                 if (!selected.jquery) {
                     selected = instance.wrap.find('dd[data-id="' + selected + '"]');
                 }
-                if (selected.length) {
+                if (selected.length && !selected.hasClass('on')) {
                     var _self = this, config = instance.config,
                         options = config.isGroup ? config.options : [{options: config.options}],
                         text = selected.text(),
@@ -151,25 +146,26 @@
                 return false;
             },
             unbindEvent: function (instance) {
-                var wrap = instance.wrap,
-                    config = instance.config;
+                var wrap = instance.wrap, config = instance.config;
                 if (wrap) {
-                    if (config.hideArrowOnDisabled) {
-                        wrap.addClass('hide-arrow');
-                    }
+                    wrap.toggleClass('hide-arrow', !!config.hideArrowOnDisabled);
                     wrap.addClass('disabled');
                     wrap.off('click');
+                    if (config.combo && config.onInput) {
+                        wrap.off('input propertychange');
+                    }
                 }
             },
             bindEvent: function (instance) {
                 var _self = this,
                     wrap = instance.wrap,
                     config = instance.config;
-                if (wrap) {
+                //取消已绑定事件
+                _self.unbindEvent(instance);
+
+                if (wrap && !config.disabled) {
+                    wrap.toggleClass('hide-arrow', !!config.hideArrowOnDisabled);
                     wrap.removeClass('disabled');
-                    if (config.hideArrowOnDisabled) {
-                        wrap.removeClass('hide-arrow');
-                    }
                     if (config.combo && config.onInput) {
                         wrap.on('input propertychange', '.select-text', function () {
                             config.onInput.call(instance, _self.getSelected(instance));
@@ -201,11 +197,8 @@
                     });
 
                     wrap.on('click', 'dd', function () {
-                        var selectedEl = $(this);
-
-                        if (!selectedEl.hasClass('on')) {
-                            _self.setSelected(instance, selectedEl);
-                        }
+                        //选择
+                        _self.setSelected(instance, $(this));
                         //选择后关闭
                         wrap.removeClass('open');
                     });
@@ -259,15 +252,10 @@
                 }
 
                 //设置listWrap分组样式
-                if (config.isGroup) {
-                    instance.listWrap.addClass('group');
-                }
+                instance.listWrap.toggleClass('group', config.isGroup);
 
-                //初始化text
-                instance.text = instance.wrap.find('.select-text');
-
-                //设置text样式
-                instance.text.attr('readonly', !config.combo);
+                //初始化text并设置text样式
+                instance.text = instance.wrap.find('.select-text').attr('readonly', !config.combo);
 
                 //设置显示文本框样式
                 if (config.noBorder) {
@@ -294,42 +282,32 @@
                     wrap = $node.prev('div.select-box');
                     if (!wrap.length) {
                         if (config.autoCopyStyle) {
-                            var style = {
-                                width: $node.css('width'),
-                                background: $node.css('background'),
-                                marginLeft: $node.css('marginLeft'),
-                                marginRight: $node.css('marginRight'),
-                                marginTop: $node.css('marginTop'),
-                                marginBottom: $node.css('marginBottom'),
-                                display: $node.css('display'),
-                                float: $node.css('float')
-                            };
+                            var style = {}, styleNames = $.isArray(config.autoCopyStyle) ? config.autoCopyStyle : autoCopyStyle;
+                            $.each(styleNames, function (i, name) {
+                                var val = $node.css(name);
+                                if (val) {
+                                    style[name] = val;
+                                } else if ($.inArray(name, styleNeedSuffix)>-1) {
+                                    $.each(styleSuffix, function (i, suffix) {
+                                        style[name + suffix] = $node.css(name + suffix);
+                                    });
+                                }
+                            });
                             config.style = $.extend(true, {}, style, config.style);
                         }
                         wrap = $(tpl);
                         //将自定义节点加入原生节点之前
-                        $node.before(wrap);
-
-                        $node.hide();
+                        $node.hide().before(wrap);
                     }
                 } else {
                     //div样式追加
-                    if (!$node.hasClass('select-box')) {
-                        $node.addClass('select-box');
-                    }
+                    $node.addClass('select-box');
                     if (!$node.find('.select-box-inner').length || !$node.find('dl').length) {
                         $node.html('<div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl>');
                     }
                 }
 
-                if (config.combo) {
-                    wrap.addClass('combo');
-                }
-
-                if (config.toggleArrowOnOpened) {
-                    wrap.addClass('toggle');
-                }
-                return wrap;
+                return wrap.toggleClass('combo', !!config.combo).toggleClass('toggle', !!config.toggleArrowOnOpened);
             },
             _parseOptions: function (instance, config, options) {
                 var _self = this,
@@ -484,9 +462,6 @@
                 if (config.filtered) {
                     config.filtered.call(instance, options);
                 }
-
-                //显示
-                instance.wrap.css('visibility', 'visible');
             },
             _getOptionHtml: function (option, keys, index, groupIndex) {
                 return '<dd data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
@@ -657,7 +632,7 @@
 
     var SelectBox = function (node, config) {
         this.config = $.extend(true, {node: $(node)}, defaults, config);
-        proto.init(this);
+        return proto.init(this);
     };
 
     $.fn.extend({
