@@ -8,15 +8,15 @@
     <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 
     <style type="text/css">
-        #select1,
-        #select2,
-        #select3,
-        #select5,
-        #select6,
-        #select7 {
-            width: 120px;
+        body {
+            background: #e6e7ec;
+        }
+        .select {
+            width: 160px;
             margin-left: 20px;
-            float: left;
+            margin-top: 5px;
+            background: #FFF;
+            visibility: hidden;
         }
     </style>
 
@@ -24,53 +24,70 @@
 <body>
 
 <div>
-    <select id="select1">
-        <option value="1">测试1-1</option>
-        <option value="2">测试1-2</option>
-        <option value="3">测试1-3</option>
-    </select>
-
-    <div id="select2">
-        <dl>
-            <dd data-id="1">测试2-1</dd>
-            <dd data-id="2">测试2-2</dd>
-            <dd data-id="3">测试2-3</dd>
-        </dl>
-    </div>
-
-    <div id="select3"></div>
-    <div id="select4" style="margin-left: 20px;"></div>
-</div>
-
-<div>
-    <select id="select5">
-        <optgroup label="测试1">
+    <div>
+        1、原生select初始化<br>
+        <select id="select1" class="select">
             <option value="1">测试1-1</option>
             <option value="2">测试1-2</option>
             <option value="3">测试1-3</option>
-        </optgroup>
-        <optgroup label="测试11">
-            <option value="11-1">测试11-1</option>
-            <option value="11-2">测试11-2</option>
-            <option value="11-3">测试11-3</option>
-        </optgroup>
-    </select>
-
-    <div id="select6">
-        <dl data-label="测试1">
-            <dd data-id="1">测试2-1</dd>
-            <dd data-id="2">测试2-2</dd>
-            <dd data-id="3">测试2-3</dd>
-        </dl>
-        <dl data-label="测试21">
-            <dd data-id="11-1">测试21-1</dd>
-            <dd data-id="11-2">测试21-2</dd>
-            <dd data-id="11-3">测试21-3</dd>
-        </dl>
+        </select>
     </div>
-
-    <div id="select7"></div>
-    <div id="select8" style="margin-left: 20px;"></div>
+    <div>
+        2、dd初始化<br>
+        <div id="select2" class="select">
+            <dl>
+                <dd data-id="1">测试2-1</dd>
+                <dd data-id="2">测试2-2</dd>
+                <dd data-id="3">测试2-3</dd>
+            </dl>
+        </div>
+    </div>
+    <div>
+        3、js初始化<br>
+        <div id="select3" class="select"></div>
+    </div>
+    <div>
+        4、js初始化，combobox，箭头切换<br>
+        <div id="select4" class="select"></div>
+    </div>
+    <div>
+        5、原生select初始化，带分组<br>
+        <select id="select5" class="select">
+            <optgroup label="测试1">
+                <option value="1">测试1-1</option>
+                <option value="2">测试1-2</option>
+                <option value="3">测试1-3</option>
+            </optgroup>
+            <optgroup label="测试11">
+                <option value="11-1">测试11-1</option>
+                <option value="11-2">测试11-2</option>
+                <option value="11-3">测试11-3</option>
+            </optgroup>
+        </select>
+    </div>
+    <div>
+        6、dd初始化，带分组<br>
+        <div id="select6" class="select">
+            <dl data-label="测试1">
+                <dd data-id="1">测试2-1</dd>
+                <dd data-id="2">测试2-2</dd>
+                <dd data-id="3">测试2-3</dd>
+            </dl>
+            <dl data-label="测试21">
+                <dd data-id="11-1">测试21-1</dd>
+                <dd data-id="11-2">测试21-2</dd>
+                <dd data-id="11-3">测试21-3</dd>
+            </dl>
+        </div>
+    </div>
+    <div>
+        7、js初始化，带分组<br>
+        <div id="select7" class="select"></div>
+    </div>
+    <div>
+        8、js初始化，combobox，箭头切换，带分组<br>
+        <div id="select8" class="select"></div>
+    </div>
 </div>
 
 <script type="text/javascript">
