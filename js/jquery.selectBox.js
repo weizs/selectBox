@@ -44,10 +44,10 @@
             autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
         },
         proto = {
-            init: function (instance) {
+            init: function (instance, refresh) {
                 var _self = this, create = instance.config.create;
                 //创建
-                _self.create(instance);
+                _self.create(instance, refresh);
                 //绑定事件
                 _self.bindEvent(instance);
                 //创建完成回调
@@ -64,11 +64,9 @@
                         var node = config.node,
                             optionEl = node.find('option[value="' + option[keys.value] + '"]'),
                             oldOptionEl = node.find('option[value="' + oldOption[keys.value] + '"]');
-
                         if (optionEl.length) {
                             optionEl.attr('selected', 'selected').prop('selected', true);
                         }
-
                         if (oldOptionEl.length) {
                             oldOptionEl.removeAttr('selected').prop('selected', false);
                         }
@@ -130,17 +128,13 @@
                         text = selected.text(),
                         oldOption = _self.select(options, instance.selected, false),
                         option = _self.select(options, selected, true);
-
                     if (option) {
                         instance.selected = selected;
                     }
-
                     if (config.formatter) {
                         text = config.formatter(text);
                     }
-
                     instance.text.val(text).attr('value', text);
-
                     return _self.change(instance, option, oldOption);
                 }
                 return false;
@@ -162,7 +156,6 @@
                     config = instance.config;
                 //取消已绑定事件
                 _self.unbindEvent(instance);
-
                 if (wrap && !config.disabled) {
                     wrap.toggleClass('hide-arrow', !!config.hideArrowOnDisabled);
                     wrap.removeClass('disabled');
@@ -171,7 +164,6 @@
                             config.onInput.call(instance, _self.getSelected(instance));
                         });
                     }
-
                     wrap.on('click', '.select-box-inner', function (e) {
                         if (wrap.hasClass('open')) {
                             wrap.removeClass('open');
@@ -195,16 +187,13 @@
                             }
                         }
                     });
-
                     wrap.on('click', 'dd', function () {
                         //选择
                         _self.setSelected(instance, $(this));
                         //选择后关闭
                         wrap.removeClass('open');
                     });
-
                     _self._preventScroll(instance.listWrap);
-
                     if (!cache.doc) {
                         cache.doc = $(document).on('click', function (e) {
                             var target = $(e.target);
@@ -224,47 +213,36 @@
                 }
                 return boxId;
             },
-            create: function (instance) {
+            create: function (instance, refresh) {
                 var _self = this,
                     config = instance.config,
                     $node = config.node,
                     options = config.options = config.options || [];
-
                 //初始化
-                var isOrigin = _self._parseOptions(instance, config, options);
-
+                var isOrigin = _self._parseOptions(instance, config, options, refresh);
                 //如果config不存在disabled配置，原生DOM有配置属性，则重新赋值
                 if (isOrigin && typeof config.disabled === 'undefined') {
                     config.disabled = $node.prop('disabled') || $node.attr('disabled') || $node.attr('readonly');
                 }
-
                 //初始化wrap
                 instance.wrap = _self.createWrap($node, isOrigin || !$node.is('div'), config);
-
                 instance.listWrap = instance.wrap.find('dl');
-
                 //设置wrap样式
                 instance.wrap.css(config.style);
-
                 //设置listWrap样式
                 if (config.maxHeight) {
                     instance.listWrap.css({maxHeight: config.maxHeight});
                 }
-
                 //设置listWrap分组样式
                 instance.listWrap.toggleClass('group', config.isGroup);
-
                 //初始化text并设置text样式
                 instance.text = instance.wrap.find('.select-text').attr('readonly', !config.combo);
-
                 //设置显示文本框样式
                 if (config.noBorder) {
                     instance.wrap.find('.select-box-inner').css({borderColor: 'transparent'});
                 }
-
                 //设置下拉项
                 _self._setOptions(instance, true);
-
             },
             fetch: function (dataKey, keys, fn) {
                 if (dataKey && dataKey.length && fn) {
@@ -309,14 +287,16 @@
 
                 return wrap.toggleClass('combo', !!config.combo).toggleClass('toggle', !!config.toggleArrowOnOpened);
             },
-            _parseOptions: function (instance, config, options) {
-                var _self = this,
-                    $node = config.node,
-                    keys = config.keys,
-                    isOrigin = false,
-                    isGroup = false,
-                    ddSource = false,
-                    originSelectSource = false;
+            _parseOptions: function (instance, config, options, refresh) {
+                var _self = this, $node = config.node, keys = config.keys,
+                    isOrigin = false, isGroup = false, ddSource = false, originSelectSource = false;
+
+                if (!refresh) {
+                    //保留原始信息
+                    instance.originStyle = $node.attr('style');
+                    instance.originClass = $node.attr('class');
+                    instance.sourceHTML = $node.html();
+                }
 
                 //如果没有options，扫描dom生成options
                 if (options.length) {
@@ -358,7 +338,6 @@
                         var dl = $node.find('dl');
                         isGroup = dl.length > 1;
                         if (dl.length) {
-                            instance.ddSourceHTML = $node.html();
                             dl.each(function (idx) {
                                 var groupEl = dl.eq(idx),
                                     groupOptions = isGroup ? [] : options,
@@ -366,7 +345,6 @@
                                 dd.each(function (i) {
                                     var option = {},
                                         optionEl = dd.eq(i);
-
                                     option[keys.text] = optionEl.text();
                                     option[keys.value] = optionEl.data(keys.value) || '';
                                     option.selected = !!optionEl.data('selected');
@@ -548,7 +526,6 @@
                     $.extend(true, instance.config, config);
                     methods.refresh();
                 };
-
                 /**
                  * 获取值、设置值
                  * @param val 可选
@@ -561,7 +538,6 @@
                         return _self.getSelected(instance);
                     }
                 };
-
                 /**
                  * 设置options数据
                  * @param options 必填
@@ -571,7 +547,6 @@
                 methods.setOptions = function (options, isFilter, hidePlaceholder) {
                     _self.setOptions(instance, options, isFilter, hidePlaceholder);
                 };
-
                 /**
                  * 刷新，初始化
                  */
@@ -586,9 +561,8 @@
                     if (instance.originSelectSource) {
                         delete config.options;
                     }
-                    _self.init(instance);
+                    _self.init(instance, true);
                 };
-
                 /**
                  * 禁用
                  */
@@ -602,7 +576,6 @@
                         }
                     }
                 };
-
                 /**
                  * 启用
                  */
@@ -618,21 +591,25 @@
                         }
                     }
                 };
-
                 /**
                  * 销毁
                  */
                 methods.destroy = function () {
                     _self.unbindEvent(instance);
-                    var boxId = _self.getBoxId(instance.config.node);
+                    var config = instance.config,
+                        node = config.node,
+                        boxId = _self.getBoxId(node);
                     if (instance.originSelectSource) {
                         instance.wrap.next().css('visibility', 'visible').show();
                         instance.wrap.remove();
-                    } else if (instance.ddSource) {
-                        instance.wrap.html(instance.ddSourceHTML);
                     } else {
-                        instance.wrap.empty();
+                        instance.wrap.html(instance.sourceHTML);
                     }
+                    node.attr({
+                        'data-select-box-id': null,
+                        'style': instance.originStyle || null,
+                        'class': instance.originClass || null
+                    });
                     delete cache[boxId];
                 };
                 return methods;
@@ -647,8 +624,7 @@
     $.fn.extend({
         selectBox: function (config) {
             //暂时仅支持单选择器创建
-            var node = this.eq(0),
-                boxId = proto.getBoxId(node);
+            var node = this.eq(0), boxId = proto.getBoxId(node);
             if (cache[boxId]) {
                 cache[boxId].setConfig(config);
             } else {
@@ -665,7 +641,6 @@
         selectBoxs: function () {
             var args = Array.prototype.slice.apply(arguments),
                 config = args.shift();
-
             if ($.type(config) === 'string') {
                 var callback = $.type(args[args.length - 1]) === 'function' ? args.pop() : noop;
                 return this.each(function () {
@@ -680,5 +655,4 @@
             });
         }
     });
-
 })(jQuery);
