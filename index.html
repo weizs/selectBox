@@ -11,19 +11,31 @@
         body {
             background: #e7e7eb;
         }
-        .wrap>div {
-            padding: 15px;
+
+        .wrap > div {
+            padding: 15px 15px 0;
             border-radius: 5px;
             background: #FFF;
             border: 1px solid #ccc;
             margin-bottom: 15px;
         }
+
         .select {
             visibility: hidden;
             width: 160px;
             margin-left: 20px;
             margin-top: 5px;
             background: #FFF;
+        }
+
+        pre {
+            border: 1px dashed #CCC;
+            border-radius: 5px;
+            background: #e7e7eb;
+            color: #0066ff;
+            margin-left: 20px;
+            padding: 10px;
+            font-size: 12px;
         }
     </style>
 
@@ -38,6 +50,10 @@
             <option value="2">测试1-2</option>
             <option value="3">测试1-3</option>
         </select>
+        <pre>
+var instance1 = $('#select1').selectBox({
+    change: change
+});</pre>
     </div>
     <div>
         2、dd初始化<br>
@@ -48,14 +64,38 @@
                 <dd data-id="3">测试2-3</dd>
             </dl>
         </div>
+        <pre>
+var instance2 = $('#select2').selectBox({
+    change: change
+});</pre>
     </div>
     <div>
         3、js初始化<br>
         <div id="select3" class="select"></div>
+        <pre>
+var instance3 = $('#select3').selectBox({
+    change: change,
+    options: [
+        {text: '测试3-1', id: '1'},
+        {text: '测试3-2', id: '2'},
+        {text: '测试3-3', id: '3'}
+    ]
+});</pre>
     </div>
     <div>
         4、js初始化，combobox，箭头切换<br>
         <div id="select4" class="select"></div>
+        <pre>
+var instance4 = $('#select4').selectBox({
+    change: change,
+    toggleArrowOnOpened: true,
+    combo: true,
+    options: [
+        {text: '测试4-1 长文本测试 长文本测试 长文本测试', id: '1'},
+        {text: '测试4-2', id: '2'},
+        {text: '测试4-3', id: '3'}
+    ]
+});</pre>
     </div>
     <div>
         5、原生select初始化，带分组<br>
@@ -71,6 +111,10 @@
                 <option value="11-3">测试11-3</option>
             </optgroup>
         </select>
+        <pre>
+var instance5 = $('#select5').selectBox({
+    change: change
+});</pre>
     </div>
     <div>
         6、dd初始化，带分组<br>
@@ -86,20 +130,70 @@
                 <dd data-id="11-3">测试21-3</dd>
             </dl>
         </div>
+        <pre>
+var instance6 = $('#select6').selectBox({
+    change: change
+});</pre>
     </div>
     <div>
         7、js初始化，带分组<br>
         <div id="select7" class="select"></div>
+        <pre>
+var instance7 = $('#select7').selectBox({
+    change: change,
+    options: [
+        {
+            label:'分组1',
+            options:[
+                {text: '测试3-1', id: '1'},
+                {text: '测试3-2', id: '2'},
+                {text: '测试3-3', id: '3'}
+            ]
+        },
+        {
+            label:'分组31',
+            options:[
+                {text: '测试31-1', id: '31-1'},
+                {text: '测试31-2', id: '31-2'},
+                {text: '测试31-3', id: '31-3'}
+            ]
+        }
+    ]
+});</pre>
     </div>
     <div>
         8、js初始化，combobox，箭头切换，带分组<br>
         <div id="select8" class="select"></div>
+        <pre>
+var instance8 = $('#select8').selectBox({
+    change: change,
+    toggleArrowOnOpened: true,
+    combo: true,
+    options: [
+        {
+            label:'分组1',
+            options:[
+                {text: '测试4-1', id: '1'},
+                {text: '测试4-2', id: '2'},
+                {text: '测试4-3', id: '3'}
+            ]
+        },
+        {
+            label:'分组31',
+            options:[
+                {text: '测试41-1', id: '41-1'},
+                {text: '测试41-2', id: '41-2'},
+                {text: '测试41-3', id: '41-3'}
+            ]
+        }
+    ]
+});</pre>
     </div>
 </div>
 
 <script type="text/javascript">
     var change = function (data) {
-        console.log('selected:',data);
+        console.log('selected:', data);
     };
     var instance1 = $('#select1').selectBox({
         change: change
@@ -139,16 +233,16 @@
         change: change,
         options: [
             {
-                label:'分组1',
-                options:[
+                label: '分组1',
+                options: [
                     {text: '测试3-1', id: '1'},
                     {text: '测试3-2', id: '2'},
                     {text: '测试3-3', id: '3'}
                 ]
             },
             {
-                label:'分组31',
-                options:[
+                label: '分组31',
+                options: [
                     {text: '测试31-1', id: '31-1'},
                     {text: '测试31-2', id: '31-2'},
                     {text: '测试31-3', id: '31-3'}
@@ -163,16 +257,16 @@
         combo: true,
         options: [
             {
-                label:'分组1',
-                options:[
+                label: '分组1',
+                options: [
                     {text: '测试4-1', id: '1'},
                     {text: '测试4-2', id: '2'},
                     {text: '测试4-3', id: '3'}
                 ]
             },
             {
-                label:'分组31',
-                options:[
+                label: '分组31',
+                options: [
                     {text: '测试41-1', id: '41-1'},
                     {text: '测试41-2', id: '41-2'},
                     {text: '测试41-3', id: '41-3'}
