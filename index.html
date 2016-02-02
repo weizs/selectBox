@@ -5,7 +5,7 @@
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/selectBox.min.css">
     <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/jquery.selectBox.js"></script>
+    <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 
     <style type="text/css">
         #select1,
@@ -75,7 +75,7 @@
 
 <script type="text/javascript">
     var change = function (data) {
-        console.log('selected:',data);
+        console.log('selected:', data);
     };
     var instance1 = $('#select1').selectBox({
         change: change
@@ -115,16 +115,16 @@
         change: change,
         options: [
             {
-                label:'分组1',
-                options:[
+                label: '分组1',
+                options: [
                     {text: '测试3-1', id: '1'},
                     {text: '测试3-2', id: '2'},
                     {text: '测试3-3', id: '3'}
                 ]
             },
             {
-                label:'分组31',
-                options:[
+                label: '分组31',
+                options: [
                     {text: '测试31-1', id: '31-1'},
                     {text: '测试31-2', id: '31-2'},
                     {text: '测试31-3', id: '31-3'}
@@ -139,16 +139,16 @@
         combo: true,
         options: [
             {
-                label:'分组1',
-                options:[
+                label: '分组1',
+                options: [
                     {text: '测试4-1', id: '1'},
                     {text: '测试4-2', id: '2'},
                     {text: '测试4-3', id: '3'}
                 ]
             },
             {
-                label:'分组31',
-                options:[
+                label: '分组31',
+                options: [
                     {text: '测试41-1', id: '41-1'},
                     {text: '测试41-2', id: '41-2'},
                     {text: '测试41-3', id: '41-3'}

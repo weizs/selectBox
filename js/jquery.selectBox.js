@@ -225,7 +225,8 @@
                     config.disabled = $node.prop('disabled') || $node.attr('disabled') || $node.attr('readonly');
                 }
                 //初始化wrap
-                instance.wrap = _self.createWrap($node, isOrigin || !$node.is('div'), config);
+                instance.wrap = _self.createWrap($node, instance.originSelectSource, config);
+                //列表包装
                 instance.listWrap = instance.wrap.find('dl');
                 //设置wrap样式
                 instance.wrap.css(config.style);
@@ -254,25 +255,27 @@
                     }
                 }
             },
-            createWrap: function ($node, isOrigin, config) {
+            createWrap: function ($node, originSelectSource, config) {
                 var wrap = $node;
-                if (isOrigin) {
+                if (originSelectSource) {
+                    //originSelectSource copy style
+                    if (config.autoCopyStyle) {
+                        var style = {}, styleNames = $.isArray(config.autoCopyStyle) ? config.autoCopyStyle : autoCopyStyle;
+                        $.each(styleNames, function (i, name) {
+                            var val = $node.css(name);
+                            if (val) {
+                                style[name] = val;
+                            } else if ($.inArray(name, styleNeedSuffix) > -1) {
+                                $.each(styleSuffix, function (i, suffix) {
+                                    style[name + suffix] = $node.css(name + suffix);
+                                });
+                            }
+                        });
+                        config.style = $.extend(true, {}, style, config.style);
+                    }
+
                     wrap = $node.prev('div.select-box');
                     if (!wrap.length) {
-                        if (config.autoCopyStyle) {
-                            var style = {}, styleNames = $.isArray(config.autoCopyStyle) ? config.autoCopyStyle : autoCopyStyle;
-                            $.each(styleNames, function (i, name) {
-                                var val = $node.css(name);
-                                if (val) {
-                                    style[name] = val;
-                                } else if ($.inArray(name, styleNeedSuffix) > -1) {
-                                    $.each(styleSuffix, function (i, suffix) {
-                                        style[name + suffix] = $node.css(name + suffix);
-                                    });
-                                }
-                            });
-                            config.style = $.extend(true, {}, style, config.style);
-                        }
                         wrap = $(tpl);
                         //将自定义节点加入原生节点之前
                         $node.hide().before(wrap);
@@ -289,7 +292,7 @@
             },
             _parseOptions: function (instance, config, options, refresh) {
                 var _self = this, $node = config.node, keys = config.keys,
-                    isOrigin = false, isGroup = false, ddSource = false, originSelectSource = false;
+                    isGroup = false, ddSource = false, originSelectSource = false;
 
                 if (!refresh) {
                     //保留原始信息
@@ -333,7 +336,6 @@
                             }
                         });
                         originSelectSource = true;
-                        isOrigin = true;
                     } else {
                         var dl = $node.find('dl');
                         isGroup = dl.length > 1;
@@ -369,7 +371,7 @@
                 instance.ddSource = ddSource;
                 config.isGroup = isGroup;
 
-                return isOrigin;
+                return originSelectSource || ddSource;
             },
             _setPlaceholder: function (config, options, hidePlaceholder) {
                 if (config.placeholder) {
