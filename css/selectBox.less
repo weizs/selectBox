@@ -34,7 +34,7 @@
     width: 100%;
     height: 100%;
     border: 1px solid @select-box-border;
-    padding: 6px 20px 6px 6px;
+    padding: 0 20px 0 6px;
     cursor: pointer;
     .v-align {
       display: table-cell;
@@ -108,7 +108,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: 5px 0 10px;
-    dd {
+    dt, dd {
       white-space: nowrap;
       height: 26px;
       line-height: 26px;
@@ -123,6 +123,17 @@
       margin: 0;
       &:hover, &.on {
         background: #f4f5f9;
+      }
+    }
+    &.group {
+      dt {
+        cursor: default;
+        &:hover, &.on {
+          background: inherit;
+        }
+      }
+      dd {
+        padding: 0 6px 0 1.5em;
       }
     }
   }

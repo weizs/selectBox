@@ -22,6 +22,7 @@
             placeholder: null,   //选中项为空时显示文本，如："请选择"
             options: null,   //纯数据初始化方式，传入对象数组
             combo: false,  //默认普通下拉框，为true时为组合框
+            //multi: false,  //是否多选，默认为单选//TODO
             clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
             hideArrowOnDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
             toggleArrowOnOpened: false,  //展开下拉列表时切换箭头，默认不切换
@@ -117,16 +118,22 @@
 
                 var _self = this,
                     config = instance.config,
-                    options = config.options,
+                    isGroup = config.isGroup,
+                    options = isGroup ? config.options : [config.options],
                     text = selected.text(),
+                    groupIndex = selected.data('group-index'),
                     index = selected.data('select-index'),
-                    option = options[index],
+                    group = options[groupIndex],
+                    option = group.options && group.options[index] || {},
                     oldOption = null;
 
                 selected.addClass('on');
                 if (instance.selected) {
                     instance.selected.removeClass('on');
-                    oldOption = options[instance.selected.data('select-index')];
+                    var oldGroupIndex = instance.selected.data('group-index'),
+                        oldIndex = instance.selected.data('select-index'),
+                        oldGroup = options[oldGroupIndex];
+                    oldOption = oldGroup.options && oldGroup.options[oldIndex] || {};
                     if (oldOption) {
                         oldOption.selected = false;
                     }
@@ -252,6 +259,11 @@
                     instance.listWrap.css({maxHeight: config.maxHeight});
                 }
 
+                //设置listWrap分组样式
+                if (config.isGroup) {
+                    instance.listWrap.addClass('group');
+                }
+
                 //初始化text
                 instance.text = instance.wrap.find('.select-text');
 
@@ -324,47 +336,81 @@
                     $node = config.node,
                     keys = config.keys,
                     isOrigin = false,
+                    isGroup = false,
                     ddSource = false,
                     originSelectSource = false;
 
                 //如果没有options，扫描dom生成options
-                if (!options.length) {
+                if (options.length) {
+                    isGroup = options[0].label && !options[0][keys.text] && !options[0][keys.value];
+                } else {
                     if ($node.is('select')) {
                         $node.css('visibility', 'hidden');
-                        var optionEls = $node.find('option');
-                        optionEls.each(function (i) {
-                            var option = {},
-                                optionEl = optionEls.eq(i);
-                            option[keys.text] = optionEl.text();
-                            option[keys.value] = optionEl.attr('value') || '';
-                            option.selected = optionEl.prop('selected');
-                            _self.fetch(config.dataKey, keys, function (key) {
-                                option[key] = optionEl.data(key) || $node.data(key);
+                        var group = $node.find('optgroup');
+
+                        isGroup = group.length;
+                        if (!isGroup) {
+                            group = group.add($node);
+                        }
+                        group.each(function (idx) {
+                            var groupEl = group.eq(idx),
+                                groupOptions = isGroup ? [] : options,
+                                optionEls = groupEl.find('option');
+                            optionEls.each(function (i) {
+                                var option = {},
+                                    optionEl = optionEls.eq(i);
+                                option[keys.text] = optionEl.text();
+                                option[keys.value] = optionEl.attr('value') || '';
+                                option.selected = optionEl.prop('selected');
+                                _self.fetch(config.dataKey, keys, function (key) {
+                                    option[key] = optionEl.data(key) || $node.data(key);
+                                });
+                                groupOptions.push(option);
                             });
-                            options.push(option);
+                            if (isGroup) {
+                                options.push({
+                                    label: groupEl.attr('label'),
+                                    options: groupOptions
+                                });
+                            }
                         });
                         originSelectSource = true;
                         isOrigin = true;
                     } else {
-                        var dd = $node.find('dl>dd');
-                        if (dd.length) {
-                            dd.each(function (i) {
-                                var option = {},
-                                    optionEl = dd.eq(i);
-                                option[keys.text] = optionEl.text();
-                                option[keys.value] = optionEl.data(keys.value) || '';
-                                option.selected = !!optionEl.data('selected');
-                                _self.fetch(config.dataKey, keys, function (key) {
-                                    option[key] = optionEl.data(key) || $node.data(key);
+                        var dl = $node.find('dl');
+                        isGroup = dl.length > 1;
+                        if (dl.length) {
+                            dl.each(function (idx) {
+                                var groupEl = dl.eq(idx),
+                                    groupOptions = isGroup ? [] : options,
+                                    dd = groupEl.find('dd');
+                                dd.each(function (i) {
+                                    var option = {},
+                                        optionEl = dd.eq(i);
+
+                                    option[keys.text] = optionEl.text();
+                                    option[keys.value] = optionEl.data(keys.value) || '';
+                                    option.selected = !!optionEl.data('selected');
+                                    _self.fetch(config.dataKey, keys, function (key) {
+                                        option[key] = optionEl.data(key) || $node.data(key);
+                                    });
+                                    groupOptions.push(option);
                                 });
-                                options.push(option);
+                                if (isGroup) {
+                                    options.push({
+                                        label: groupEl.data('label'),
+                                        options: groupOptions
+                                    });
+                                }
                             });
                             ddSource = true;
                         }
                     }
                 }
+
                 instance.originSelectSource = originSelectSource;
                 instance.domSource = ddSource || originSelectSource;
+                config.isGroup = isGroup;
 
                 return isOrigin;
             },
@@ -429,7 +475,7 @@
                     options[0].selected = true;
                 }
 
-                var html = this._getOptionsHtml(options, keys, config.filterItem);
+                var html = this._getOptionsHtml(config.isGroup, options, keys, config.filterItem);
 
                 instance.listWrap.html(html);
                 //显示选中文本
@@ -439,27 +485,39 @@
                     config.filtered.call(instance, options);
                 }
             },
-            _getOptionHtml: function (option, keys, index) {
-                return '<dd data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
+            _getOptionHtml: function (option, keys, index, groupIndex) {
+                return '<dd data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
             },
-            _getOptionsHtml: function (options, keys, filterItem) {
+            _getOptionsHtml: function (isGroup, groupOptions, keys, filterItem) {
                 var optionHtml = [];
-                if (options && options.length) {
-                    if (filterItem) {
-                        for (var f = 0; f < options.length; f++) {
-                            var item = options[f];
-                            item.is_valid = filterItem(item);
-                            if (item.is_valid) {
-                                optionHtml.push(this._getOptionHtml(item, keys, f));
-                            }
+                if (groupOptions && groupOptions.length) {
+                    var optionsArray = [{
+                        options: groupOptions
+                    }];
+                    if (isGroup) {
+                        optionsArray = groupOptions;
+                    }
+                    for (var idx = 0; idx < optionsArray.length; idx++) {
+                        var optionsObj = optionsArray[idx];
+                        if (isGroup) {
+                            optionHtml.push('<dt>' + (optionsObj.label || (idx + 1)) + '</dt>');
                         }
-                    } else {
-                        for (var i = 0; i < options.length; i++) {
-                            optionHtml.push(this._getOptionHtml(options[i], keys, i));
+                        var options = optionsObj.options;
+                        if (filterItem) {
+                            for (var f = 0; f < options.length; f++) {
+                                var item = options[f];
+                                item.is_valid = filterItem(item);
+                                if (item.is_valid) {
+                                    optionHtml.push(this._getOptionHtml(item, keys, f, idx));
+                                }
+                            }
+                        } else {
+                            for (var i = 0; i < options.length; i++) {
+                                optionHtml.push(this._getOptionHtml(options[i], keys, i, idx));
+                            }
                         }
                     }
                 }
-
                 return optionHtml.join('');
             },
             _preventScroll: function (dom) {

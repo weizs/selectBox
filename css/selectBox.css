@@ -16,7 +16,7 @@
   width: 100%;
   height: 100%;
   border: 1px solid #e6e7ec;
-  padding: 6px 20px 6px 6px;
+  padding: 0 20px 0 6px;
   cursor: pointer;
 }
 .select-box .select-box-inner .v-align {
@@ -87,6 +87,7 @@
   overflow-x: hidden;
   padding: 5px 0 10px;
 }
+.select-box dl dt,
 .select-box dl dd {
   white-space: nowrap;
   height: 26px;
@@ -101,9 +102,21 @@
   user-select: none;
   margin: 0;
 }
+.select-box dl dt:hover,
 .select-box dl dd:hover,
+.select-box dl dt.on,
 .select-box dl dd.on {
   background: #f4f5f9;
+}
+.select-box dl.group dt {
+  cursor: default;
+}
+.select-box dl.group dt:hover,
+.select-box dl.group dt.on {
+  background: inherit;
+}
+.select-box dl.group dd {
+  padding: 0 6px 0 1.5em;
 }
 .select-box.disabled {
   background: #e6e7ec;

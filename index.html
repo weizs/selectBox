@@ -5,12 +5,15 @@
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/selectBox.min.css">
     <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
+    <script type="text/javascript" src="js/jquery.selectBox.js"></script>
 
     <style type="text/css">
         #select1,
         #select2,
-        #select3 {
+        #select3,
+        #select5,
+        #select6,
+        #select7 {
             width: 120px;
             margin-left: 20px;
             float: left;
@@ -20,22 +23,55 @@
 </head>
 <body>
 
-<select id="select1">
-    <option value="1">测试1-1</option>
-    <option value="2">测试1-2</option>
-    <option value="3">测试1-3</option>
-</select>
+<div>
+    <select id="select1">
+        <option value="1">测试1-1</option>
+        <option value="2">测试1-2</option>
+        <option value="3">测试1-3</option>
+    </select>
 
-<div id="select2">
-    <dl>
-        <dd data-id="1">测试2-1</dd>
-        <dd data-id="2">测试2-2</dd>
-        <dd data-id="3">测试2-3</dd>
-    </dl>
+    <div id="select2">
+        <dl>
+            <dd data-id="1">测试2-1</dd>
+            <dd data-id="2">测试2-2</dd>
+            <dd data-id="3">测试2-3</dd>
+        </dl>
+    </div>
+
+    <div id="select3"></div>
+    <div id="select4" style="margin-left: 20px;"></div>
 </div>
 
-<div id="select3"></div>
-<div id="select4" style="margin-left: 20px;"></div>
+<div>
+    <select id="select5">
+        <optgroup label="测试1">
+            <option value="1">测试1-1</option>
+            <option value="2">测试1-2</option>
+            <option value="3">测试1-3</option>
+        </optgroup>
+        <optgroup label="测试11">
+            <option value="11-1">测试11-1</option>
+            <option value="11-2">测试11-2</option>
+            <option value="11-3">测试11-3</option>
+        </optgroup>
+    </select>
+
+    <div id="select6">
+        <dl data-label="测试1">
+            <dd data-id="1">测试2-1</dd>
+            <dd data-id="2">测试2-2</dd>
+            <dd data-id="3">测试2-3</dd>
+        </dl>
+        <dl data-label="测试21">
+            <dd data-id="11-1">测试21-1</dd>
+            <dd data-id="11-2">测试21-2</dd>
+            <dd data-id="11-3">测试21-3</dd>
+        </dl>
+    </div>
+
+    <div id="select7"></div>
+    <div id="select8" style="margin-left: 20px;"></div>
+</div>
 
 <script type="text/javascript">
     var change = function (data) {
@@ -65,6 +101,60 @@
             {text: '测试4-1 长文本测试 长文本测试 长文本测试', id: '1'},
             {text: '测试4-2', id: '2'},
             {text: '测试4-3', id: '3'}
+        ]
+    });
+
+    var instance5 = $('#select5').selectBox({
+        change: change
+    });
+
+    var instance6 = $('#select6').selectBox({
+        change: change
+    });
+
+    var instance7 = $('#select7').selectBox({
+        change: change,
+        options: [
+            {
+                label:'分组1',
+                options:[
+                    {text: '测试3-1', id: '1'},
+                    {text: '测试3-2', id: '2'},
+                    {text: '测试3-3', id: '3'}
+                ]
+            },
+            {
+                label:'分组31',
+                options:[
+                    {text: '测试31-1', id: '31-1'},
+                    {text: '测试31-2', id: '31-2'},
+                    {text: '测试31-3', id: '31-3'}
+                ]
+            }
+        ]
+    });
+
+    var instance8 = $('#select8').selectBox({
+        change: change,
+        toggleArrowOnOpened: true,
+        combo: true,
+        options: [
+            {
+                label:'分组1',
+                options:[
+                    {text: '测试3-1', id: '1'},
+                    {text: '测试3-2', id: '2'},
+                    {text: '测试3-3', id: '3'}
+                ]
+            },
+            {
+                label:'分组31',
+                options:[
+                    {text: '测试31-1', id: '31-1'},
+                    {text: '测试31-2', id: '31-2'},
+                    {text: '测试31-3', id: '31-3'}
+                ]
+            }
         ]
     });
 </script>
