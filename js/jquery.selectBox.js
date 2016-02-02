@@ -358,6 +358,7 @@
                         var dl = $node.find('dl');
                         isGroup = dl.length > 1;
                         if (dl.length) {
+                            instance.ddSourceHTML = $node.html();
                             dl.each(function (idx) {
                                 var groupEl = dl.eq(idx),
                                     groupOptions = isGroup ? [] : options,
@@ -387,7 +388,7 @@
                 }
 
                 instance.originSelectSource = originSelectSource;
-                instance.domSource = ddSource || originSelectSource;
+                instance.ddSource = ddSource;
                 config.isGroup = isGroup;
 
                 return isOrigin;
@@ -627,6 +628,10 @@
                     if (instance.originSelectSource) {
                         instance.wrap.next().css('visibility', 'visible').show();
                         instance.wrap.remove();
+                    } else if (instance.ddSource) {
+                        instance.wrap.html(instance.ddSourceHTML);
+                    } else {
+                        instance.wrap.empty();
                     }
                     delete cache[boxId];
                 };
