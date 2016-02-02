@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/selectBox.min.css">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
 
     <style type="text/css">
@@ -136,6 +136,7 @@
     var instance8 = $('#select8').selectBox({
         change: change,
         toggleArrowOnOpened: true,
+        hideArrowOnDisabled: true,
         combo: true,
         options: [
             {

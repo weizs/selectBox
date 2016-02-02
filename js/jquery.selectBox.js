@@ -144,6 +144,7 @@
                 if (wrap) {
                     wrap.toggleClass('hide-arrow', !!config.hideArrowOnDisabled);
                     wrap.addClass('disabled');
+                    wrap.removeClass('open');
                     wrap.off('click');
                     if (config.combo && config.onInput) {
                         wrap.off('input propertychange');
@@ -572,7 +573,6 @@
                     if (!config.disabled) {
                         config.disabled = true;
                         _self.unbindEvent(instance);
-
                         if (config.combo) {
                             instance.text.attr('readonly', 'readonly');
                         }
@@ -585,9 +585,6 @@
                     if (config.disabled) {
                         config.disabled = false;
                         _self.bindEvent(instance);
-                        if (config.hideArrowOnDisabled) {
-                            instance.wrap.removeClass('hide-arrow');
-                        }
                         if (config.combo) {
                             instance.text.removeAttr('readonly');
                         }

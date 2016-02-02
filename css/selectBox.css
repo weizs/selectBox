@@ -138,12 +138,9 @@
 .select-box.disabled .select-box-inner:hover input.select-text {
   color: #a5a6aa;
 }
-.select-box.disabled.hide-arrow .select-box-inner {
-  padding: 6px;
-}
 .select-box.disabled.hide-arrow .select-box-inner:before,
 .select-box.disabled.hide-arrow .select-box-inner:after {
-  display: none;
+  visibility: hidden;
 }
 .select-box.open dl {
   display: block;
