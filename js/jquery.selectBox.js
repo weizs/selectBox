@@ -9,7 +9,7 @@
  */
 ;(function ($) {
     'use strict';
-    var cache = {},
+    var cache = window.cache = {},
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
         defaults = {
@@ -22,7 +22,6 @@
             placeholder: null,   //选中项为空时显示文本，如："请选择"
             options: null,   //纯数据初始化方式，传入对象数组
             combo: false,  //默认普通下拉框，为true时为组合框
-            //multi: false,  //是否多选，默认为单选//TODO
             clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
             hideArrowOnDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
             toggleArrowOnOpened: false,  //展开下拉列表时切换箭头，默认不切换
@@ -36,7 +35,7 @@
             disabled: false,  //设置初始化时是否禁用
             noBorder: false,  //是否显示显示部分边框
             maxHeight: null,   //是否显示显示部分边框
-            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
+            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width','background']
         },
         proto = {
             init: function (instance) {
@@ -61,28 +60,30 @@
                 return _self.getMethods(instance);
             },
             change: function (instance, option, oldOption) {
-                var config = instance.config,
-                    keys = config.keys;
-                if (instance.originSelectSource) {
-                    var node = config.node,
-                        optionEl = node.find('option[value="' + option[keys.value] + '"]'),
-                        oldOptionEl = node.find('option[value="' + oldOption[keys.value] + '"]');
+                var config = instance.config, keys = config.keys;
+                if (option && oldOption) {
+                    if (instance.originSelectSource) {
+                        var node = config.node,
+                            optionEl = node.find('option[value="' + option[keys.value] + '"]'),
+                            oldOptionEl = node.find('option[value="' + oldOption[keys.value] + '"]');
 
-                    if (optionEl.length) {
-                        optionEl.attr('selected', 'selected').prop('selected', true);
-                    }
+                        if (optionEl.length) {
+                            optionEl.attr('selected', 'selected').prop('selected', true);
+                        }
 
-                    if (oldOptionEl.length) {
-                        oldOptionEl.removeAttr('selected').prop('selected', false);
+                        if (oldOptionEl.length) {
+                            oldOptionEl.removeAttr('selected').prop('selected', false);
+                        }
+                        node.trigger('change');
                     }
-                    node.trigger('change');
+                    if (config.combo && config.onInput) {
+                        config.onInput.call(instance, this.getSelected(instance));
+                    }
+                    if (typeof config.change === 'function') {
+                        config.change.call(instance, option);
+                    }
                 }
-                if (config.combo && config.onInput) {
-                    config.onInput.call(instance, this.getSelected(instance));
-                }
-                if (typeof config.change === 'function') {
-                    config.change.call(instance, option);
-                }
+                return true;
             },
             getSelected: function (instance) {
                 var config = instance.config,
@@ -107,48 +108,44 @@
                     return option;
                 }
             },
+            select: function (options, node, status) {
+                if (options && node) {
+                    var groupIndex = node.data('group-index'), index = node.data('select-index'), group = options[groupIndex];
+                    node.toggleClass('on', status);
+                    if (group && group.options) {
+                        var option = group.options[index];
+                        if (option) {
+                            option.selected = status;
+                        }
+                        return option;
+                    }
+                }
+                return null;
+            },
             setSelected: function (instance, selected) {
                 if (!selected.jquery) {
                     selected = instance.wrap.find('dd[data-id="' + selected + '"]');
                 }
+                if (selected.length) {
+                    var _self = this, config = instance.config,
+                        options = config.isGroup ? config.options : [{options: config.options}],
+                        text = selected.text(),
+                        oldOption = _self.select(options, instance.selected, false),
+                        option = _self.select(options, selected, true);
 
-                if (!selected.length) {
-                    return false;
-                }
-
-                var _self = this,
-                    config = instance.config,
-                    isGroup = config.isGroup,
-                    options = isGroup ? config.options : [{options: config.options}],
-                    text = selected.text(),
-                    groupIndex = selected.data('group-index'),
-                    index = selected.data('select-index'),
-                    group = options[groupIndex],
-                    option = group.options && group.options[index] || {},
-                    oldOption = null;
-
-                selected.addClass('on');
-                if (instance.selected) {
-                    instance.selected.removeClass('on');
-                    var oldGroupIndex = instance.selected.data('group-index'),
-                        oldIndex = instance.selected.data('select-index'),
-                        oldGroup = options[oldGroupIndex];
-                    oldOption = oldGroup.options && oldGroup.options[oldIndex] || {};
-                    if (oldOption) {
-                        oldOption.selected = false;
+                    if (option) {
+                        instance.selected = selected;
                     }
+
+                    if (config.formatter) {
+                        text = config.formatter(text);
+                    }
+
+                    instance.text.val(text).attr('value', text);
+
+                    return _self.change(instance, option, oldOption);
                 }
-
-                option.selected = true;
-                instance.selected = selected;
-
-                if (config.formatter) {
-                    text = config.formatter(text);
-                }
-                instance.text.val(text).attr('value', text);
-
-                _self.change(instance, option, oldOption);
-                return true;
+                return false;
             },
             unbindEvent: function (instance) {
                 var wrap = instance.wrap,
@@ -297,6 +294,7 @@
                         if (config.autoCopyStyle) {
                             var style = {
                                 width: $node.css('width'),
+                                background: $node.css('background'),
                                 marginLeft: $node.css('marginLeft'),
                                 marginRight: $node.css('marginRight'),
                                 marginTop: $node.css('marginTop'),
@@ -348,7 +346,7 @@
                         $node.css('visibility', 'hidden');
                         var group = $node.find('optgroup');
 
-                        isGroup = group.length;
+                        isGroup = !!group.length;
                         if (!isGroup) {
                             group = group.add($node);
                         }
@@ -484,6 +482,9 @@
                 if (config.filtered) {
                     config.filtered.call(instance, options);
                 }
+
+                //显示
+                instance.wrap.css('visibility', 'visible');
             },
             _getOptionHtml: function (option, keys, index, groupIndex) {
                 return '<dd data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
@@ -654,7 +655,7 @@
 
     var SelectBox = function (node, config) {
         this.config = $.extend(true, {node: $(node)}, defaults, config);
-        return proto.init(this);
+        proto.init(this);
     };
 
     $.fn.extend({
