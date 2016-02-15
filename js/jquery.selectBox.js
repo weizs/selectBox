@@ -16,6 +16,7 @@
         styleNeedSuffix = ['margin', 'padding'],
         styleSuffix = ['Left', 'Right', 'Top', 'Bottom'],
         autoCopyStyle = ['float', 'display', 'margin', 'width'],
+        fnProp = ['create', 'change', 'formatter', 'filterItem', 'filter', 'filtered', 'input'],
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
         defaults = {
@@ -31,31 +32,34 @@
             clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
             hideArrowOnDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
             toggleArrowOnOpened: false,  //展开下拉列表时切换箭头，默认不切换
-            onInput: null,   //设置combo为true情况下输入内容时回调
-            filter: null,   //初始化时过滤options数据，返回过滤后数组
-            filtered: null,   //filterData调用完毕回调，返回已过滤数据
-            filterItem: null,   //输出options时依次过滤每个节点数据
-            formatter: null,   //输出options时格式化text内容
-            create: null,   //创建完成后回调
-            change: null,   //change事件，改变选中值时回调
             disabled: false,  //设置初始化时是否禁用
             noBorder: false,  //是否显示显示部分边框
             maxHeight: null,   //是否显示显示部分边框
-            autoCopyStyle: true    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
+            autoCopyStyle: true,    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
+            input: null,   //fn,设置combo为true情况下输入内容时回调
+            filter: null,   //fn,初始化时过滤options数据，返回过滤后数组
+            filtered: null,   //fn,filterData调用完毕回调，返回已过滤数据
+            filterItem: null,   //fn,输出options时依次过滤每个节点数据
+            formatter: null,   //fn,输出options时格式化text内容
+            create: null,   //fn,创建完成后回调
+            change: null   //fn,change事件，改变选中值时回调
         },
         proto = {
             init: function (instance, refresh) {
-                var _self = this, create = instance.config.create;
+                this.validProp(instance);
                 //创建
-                _self.create(instance, refresh);
+                this.create(instance, refresh);
                 //绑定事件
-                _self.bindEvent(instance);
-                //创建完成回调
-                if (create && typeof create === 'function') {
-                    create.call(instance, _self.getSelected(instance));
-                }
+                this.bindEvent(instance);
                 //返回methods
-                return _self.getMethods(instance);
+                return this.getMethods(instance);
+            },
+            validProp: function (instance) {
+                $.each(fnProp, function (i, key) {
+                    if (!$.isFunction(instance.config[key])) {
+                        instance.config[key] = null;
+                    }
+                });
             },
             change: function (instance, option, oldOption) {
                 var config = instance.config, keys = config.keys;
@@ -72,10 +76,10 @@
                         }
                         node.trigger('change');
                     }
-                    if (config.combo && config.onInput) {
-                        config.onInput.call(instance, this.getSelected(instance));
+                    if (config.combo && config.input) {
+                        config.input.call(instance, this.getSelected(instance));
                     }
-                    if (typeof config.change === 'function') {
+                    if (config.change) {
                         config.change.call(instance, option);
                     }
                 }
@@ -106,7 +110,9 @@
             },
             select: function (options, node, status) {
                 if (options && node) {
-                    var groupIndex = node.data('group-index'), index = node.data('select-index'), group = options[groupIndex];
+                    var groupIndex = node.data('group-index'),
+                        index = node.data('select-index'),
+                        group = options[groupIndex];
                     node.toggleClass('on', status);
                     if (group && group.options) {
                         var option = group.options[index];
@@ -146,7 +152,7 @@
                     wrap.addClass('disabled');
                     wrap.removeClass('open');
                     wrap.off('click');
-                    if (config.combo && config.onInput) {
+                    if (config.combo && config.input) {
                         wrap.off('input propertychange');
                     }
                 }
@@ -160,9 +166,9 @@
                 if (wrap && !config.disabled) {
                     wrap.toggleClass('hide-arrow', !!config.hideArrowOnDisabled);
                     wrap.removeClass('disabled');
-                    if (config.combo && config.onInput) {
+                    if (config.combo && config.input) {
                         wrap.on('input propertychange', '.select-text', function () {
-                            config.onInput.call(instance, _self.getSelected(instance));
+                            config.input.call(instance, _self.getSelected(instance));
                         });
                     }
                     wrap.on('click', '.select-box-inner', function (e) {
@@ -204,13 +210,16 @@
                         });
                     }
                 }
+                //创建完成回调
+                if (config.create) {
+                    config.create.call(instance, this.getSelected(instance));
+                }
             },
             getBoxId: function (node) {
                 var boxId = node.data('select-box-id');
                 if (node && !boxId) {
                     boxId = 'select_' + index++;
                     node.attr('data-select-box-id', boxId);
-                    return boxId;
                 }
                 return boxId;
             },
@@ -222,7 +231,7 @@
                 //初始化
                 var isOrigin = _self._parseOptions(instance, config, options, refresh);
                 //如果config不存在disabled配置，原生DOM有配置属性，则重新赋值
-                if (isOrigin && typeof config.disabled === 'undefined') {
+                if (isOrigin && $.type(config.disabled) === 'undefined') {
                     config.disabled = $node.prop('disabled') || $node.attr('disabled') || $node.attr('readonly');
                 }
                 //初始化wrap
@@ -409,20 +418,15 @@
                 instance.text.val(text).attr('value', text);
             },
             _setOptions: function (instance, isFilter, hidePlaceholder) {
-                var config = instance.config,
-                    options = config.options,
-                    hasSelect = false,
-                    keys = config.keys;
-
+                var config = instance.config, options = config.options, hasSelect = false, keys = config.keys;
 
                 //如果存在filter，则事先执行filter
-                if (isFilter && config.filter && typeof config.filter === 'function') {
+                if (isFilter && config.filter) {
                     options = config.options = config.filter(options);
                 }
 
                 //如果存在placeholder，则事先插入
                 this._setPlaceholder(config, options, hidePlaceholder);
-
                 //判断默认
                 for (var i = 0; i < options.length; i++) {
                     if (options[i].selected) {
@@ -623,7 +627,7 @@
     $.fn.extend({
         selectBox: function (config) {
             //暂时仅支持单选择器创建
-            var node = this.eq(0), boxId = proto.getBoxId(node);
+            var node = this.first(), boxId = proto.getBoxId(node);
             if (cache[boxId]) {
                 cache[boxId].setConfig(config);
             } else {
