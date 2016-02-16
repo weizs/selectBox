@@ -2,9 +2,9 @@
 
 依赖jQuery，兼容IE8+ & 其他浏览器
 
-![image](https://raw.githubusercontent.com/weizhansheng/selectBox/master/select-box.png)
+![image](https://raw.githubusercontent.com/weizs/selectBox/master/select-box.png)
 
-[Demo Link](http://weizhansheng.github.io/selectBox/)
+[Demo Link](http://weizs.github.io/selectBox/)
 
 ## 结构
 
