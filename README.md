@@ -102,48 +102,48 @@
 
 ## 参数
 
-dataKey: []<br>//通过select或者dl>dd进行初始化时，可在option或者dd上增加额外属性，格式为data-[key]，如：“data-corp_id”,会把对应数据存入options对象数组内
+* dataKey: []<br>//通过select或者dl>dd进行初始化时，可在option或者dd上增加额外属性，格式为data-[key]，如：“data-corp_id”,会把对应数据存入options对象数组内
 
-style: {}<br>//select生成转化后wrap包装内联样式追加
+* style: {}<br>//select生成转化后wrap包装内联样式追加
 
-keys: {
+* keys: {
     text: 'text',
     value: 'id'
-},<br>//select text属性，可根据数据自行修改，默认通过dom创建的情况无需修改，select value属性，可根据数据自行修改，默认通过dom创建的情况无需修改
+}<br>//select text属性，可根据数据自行修改，默认通过dom创建的情况无需修改，select value属性，可根据数据自行修改，默认通过dom创建的情况无需修改
 
-placeholder: null<br>//选中项为空时显示文本，如："请选择"
+* placeholder: null<br>//选中项为空时显示文本，如："请选择"
 
-options: null<br>//纯数据初始化方式，传入对象数组
+* options: null<br>//纯数据初始化方式，传入对象数组
 
-combo: false<br>//默认普通下拉框，为true时为组合框
+* combo: false<br>//默认普通下拉框，为true时为组合框
 
-clearText: false<br>//combo为true时点击文本是否清空当前显示文本，默认不清空
+* clearText: false<br>//combo为true时点击文本是否清空当前显示文本，默认不清空
 
-hideArrowOnDisabled: false<br>//禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
+* hideArrowOnDisabled: false<br>//禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
 
-toggleArrow: false<br>//展开下拉列表时切换箭头，默认不切换
+* toggleArrow: false<br>//展开下拉列表时切换箭头，默认不切换
 
-disabled: false<br>//设置初始化时是否禁用
+* disabled: false<br>//设置初始化时是否禁用
 
-noBorder: false<br>//是否显示显示部分边框
+* noBorder: false<br>//是否显示显示部分边框
 
-maxHeight: null<br>//是否显示显示部分边框
+* maxHeight: null<br>//是否显示显示部分边框
 
-copyStyle: true<br>//原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
+* copyStyle: true<br>//原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
 
-input: null<br>//fn,设置combo为true情况下输入内容时回调
+* input: null<br>//fn,设置combo为true情况下输入内容时回调
 
-filter: null<br>//fn,初始化时过滤options数据，返回过滤后数组
+* filter: null<br>//fn,初始化时过滤options数据，返回过滤后数组
 
-filtered: null<br>//fn,filterData调用完毕回调，返回已过滤数据
+* filtered: null<br>//fn,filterData调用完毕回调，返回已过滤数据
 
-filterItem: null<br>//fn,输出options时依次过滤每个节点数据
+* filterItem: null<br>//fn,输出options时依次过滤每个节点数据
 
-formatter: null<br>//fn,输出options时格式化text内容
+* formatter: null<br>//fn,输出options时格式化text内容
 
-create: null<br>//fn,创建完成后回调
+* create: null<br>//fn,创建完成后回调
 
-change: null<br>//fn,change事件，改变选中值时回调
+* change: null<br>//fn,change事件，改变选中值时回调
 
 ## 方法
 
