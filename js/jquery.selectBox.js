@@ -15,7 +15,7 @@
         },
         styleNeedSuffix = ['margin', 'padding'],
         styleSuffix = ['Left', 'Right', 'Top', 'Bottom'],
-        autoCopyStyle = ['float', 'display', 'margin', 'width'],
+        styleKeys = ['float', 'display', 'margin', 'width'],
         fnProp = ['create', 'change', 'formatter', 'filterItem', 'filter', 'filtered', 'input'],
         index = 1,
         tpl = '<div class="select-box"><div class="select-box-inner"><div class="v-align"><input type="text" class="select-text" /></div></div><dl></dl></div>',
@@ -29,13 +29,13 @@
             placeholder: null,   //选中项为空时显示文本，如："请选择"
             options: null,   //纯数据初始化方式，传入对象数组
             combo: false,  //默认普通下拉框，为true时为组合框
-            clearTextOnFocus: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
+            clearText: false,  //combo为true时点击文本是否清空当前显示文本，默认不清空
             hideArrowOnDisabled: false,  //禁用时隐藏下拉箭头，默认不隐藏，用于特殊场景
-            toggleArrowOnOpened: false,  //展开下拉列表时切换箭头，默认不切换
+            toggleArrow: false,  //展开下拉列表时切换箭头，默认不切换
             disabled: false,  //设置初始化时是否禁用
             noBorder: false,  //是否显示显示部分边框
             maxHeight: null,   //是否显示显示部分边框
-            autoCopyStyle: true,    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
+            copyStyle: true,    //原生select作为源的时候，自动扫描默认样式['display','border','margin','width']
             input: null,   //fn,设置combo为true情况下输入内容时回调
             filter: null,   //fn,初始化时过滤options数据，返回过滤后数组
             filtered: null,   //fn,filterData调用完毕回调，返回已过滤数据
@@ -185,7 +185,7 @@
                             }
 
                             wrap.addClass('open');
-                            if (config.combo && config.clearTextOnFocus) {
+                            if (config.combo && config.clearText) {
                                 var $target = $(e.target);
                                 if ($target.is('.select-text')) {
                                     $target.val('');
@@ -269,8 +269,8 @@
                 var wrap = $node;
                 if (originSelectSource) {
                     //originSelectSource copy style
-                    if (config.autoCopyStyle) {
-                        var style = {}, styleNames = $.isArray(config.autoCopyStyle) ? config.autoCopyStyle : autoCopyStyle;
+                    if (config.copyStyle) {
+                        var style = {}, styleNames = $.isArray(config.copyStyle) ? config.copyStyle : styleKeys;
                         $.each(styleNames, function (i, name) {
                             var val = $node.css(name);
                             if (val) {
@@ -298,7 +298,7 @@
                     }
                 }
 
-                return wrap.toggleClass('combo', !!config.combo).toggleClass('toggle', !!config.toggleArrowOnOpened);
+                return wrap.toggleClass('combo', !!config.combo).toggleClass('toggle', !!config.toggleArrow);
             },
             _parseOptions: function (instance, config, options, refresh) {
                 var _self = this, $node = config.node, keys = config.keys,
