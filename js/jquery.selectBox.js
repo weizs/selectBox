@@ -127,15 +127,20 @@
                 return null;
             },
             setSelected: function (instance, selected) {
+                var isFirst = $.type(selected) === 'undefined';
+                if (isFirst) {
+                    selected = instance.wrap.find('dd.on');
+                    if (!selected.length) {
+                        selected = instance.wrap.find('dd').first();
+                    }
+                }
                 if (!selected.jquery) {
                     selected = instance.wrap.find('dd[data-id="' + selected + '"]');
                 }
-                if (selected.length && !selected.hasClass('on')) {
-                    var _self = this, config = instance.config,
-                        options = config.isGroup ? config.options : [{options: config.options}],
-                        text = selected.text(),
-                        oldOption = _self.selectOption(options, instance.selected, false),
-                        option = _self.selectOption(options, selected, true);
+                if (isFirst || (selected.length && !selected.hasClass('on'))) {
+                    var config = instance.config, options = config.isGroup ? config.options : [{options: config.options}], text = selected.text(),
+                        oldOption = this.selectOption(options, instance.selected, false),
+                        option = this.selectOption(options, selected, true);
                     if (option) {
                         instance.selected = selected;
                         if (config.formatter) {
@@ -143,7 +148,7 @@
                         }
                         instance.text.val(text).attr('value', text).toggleClass('placeholder', !!option.__placeholder);
                     }
-                    return _self.change(instance, option, oldOption);
+                    return !isFirst && this.change(instance, option, oldOption);
                 }
                 return false;
             },
@@ -226,18 +231,17 @@
                 return boxId;
             },
             create: function (instance, refresh) {
-                var _self = this,
-                    config = instance.config,
+                var config = instance.config,
                     $node = config.node,
                     options = config.options = config.options || [];
                 //初始化
-                var isOrigin = _self._parseOptions(instance, config, options, refresh);
+                var isOrigin = this._parseOptions(instance, config, options, refresh);
                 //如果config不存在disabled配置，原生DOM有配置属性，则重新赋值
                 if (isOrigin && $.type(config.disabled) === 'undefined') {
                     config.disabled = $node.prop('disabled') || $node.attr('disabled') || $node.attr('readonly');
                 }
                 //初始化wrap
-                instance.wrap = _self.createWrap($node, instance.originSelectSource, config);
+                instance.wrap = this.createWrap($node, instance.originSelectSource, config);
                 //列表包装
                 instance.listWrap = instance.wrap.find('dl');
                 //设置wrap样式
@@ -255,7 +259,9 @@
                     instance.wrap.find('.select-box-inner').css({borderColor: 'transparent'});
                 }
                 //设置下拉项
-                _self._setOptions(instance, true);
+                this._setOptions(instance, true);
+                //选中默认值
+                this.setSelected(instance);
             },
             fetch: function (dataKey, keys, fn) {
                 if (dataKey && dataKey.length && fn) {
@@ -408,24 +414,8 @@
                     }
                 }
             },
-            _showSelected: function (instance) {
-                var config = instance.config, selected = instance.wrap.find('dd.on'), options = config.options || [];
-
-                if (!selected.length) {
-                    selected = instance.wrap.find('dd:eq(0)').addClass('on');
-                }
-
-                var option = options[instance.selected ? instance.selected.data('select-index') : 0], text = selected.text();
-
-                if (config.formatter) {
-                    text = config.formatter(text);
-                }
-
-                instance.selected = selected;
-                instance.text.val(text).attr('value', text).toggleClass('placeholder', text === config.placeholder && option.__placeholder);
-            },
             _setOptions: function (instance, isFilter, hidePlaceholder) {
-                var config = instance.config, options = config.options, hasSelect = false, keys = config.keys;
+                var config = instance.config, options = config.options, keys = config.keys;
 
                 //如果存在filter，则事先执行filter
                 if (isFilter && config.filter) {
@@ -434,23 +424,10 @@
 
                 //如果存在placeholder，则事先插入
                 this._setPlaceholder(config, options, hidePlaceholder);
-                //判断默认
-                for (var i = 0; i < options.length; i++) {
-                    if (options[i].selected) {
-                        hasSelect = true;
-                        break;
-                    }
-                }
-
-                if (!hasSelect && options[0]) {
-                    options[0].selected = true;
-                }
 
                 var html = this._getOptionsHtml(config.isGroup, options, keys, config.filterItem);
 
                 instance.listWrap.html(html);
-                //显示选中文本
-                this._showSelected(instance);
 
                 if (config.filtered) {
                     config.filtered.call(instance, options);
