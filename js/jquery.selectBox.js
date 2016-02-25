@@ -80,7 +80,9 @@
                         config.input.call(instance, this.getSelected(instance));
                     }
                     if (config.change) {
-                        config.change.call(instance, option);
+                        var data = $.extend({}, option);
+                        delete data.__placeholder;
+                        config.change.call(instance, data);
                     }
                 }
                 return true;
@@ -108,14 +110,14 @@
                     return option;
                 }
             },
-            select: function (options, node, status) {
+            selectOption: function (options, node, status) {
                 if (options && node) {
                     var groupIndex = node.data('group-index'),
                         index = node.data('select-index'),
-                        group = options[groupIndex];
+                        data = options[groupIndex];
                     node.toggleClass('on', status);
-                    if (group && group.options) {
-                        var option = group.options[index];
+                    if (data && (data.options || data.__placeholder)) {
+                        var option = data.__placeholder ? data : data.options[index];
                         if (option) {
                             option.selected = status;
                         }
@@ -132,15 +134,15 @@
                     var _self = this, config = instance.config,
                         options = config.isGroup ? config.options : [{options: config.options}],
                         text = selected.text(),
-                        oldOption = _self.select(options, instance.selected, false),
-                        option = _self.select(options, selected, true);
+                        oldOption = _self.selectOption(options, instance.selected, false),
+                        option = _self.selectOption(options, selected, true);
                     if (option) {
                         instance.selected = selected;
+                        if (config.formatter) {
+                            text = config.formatter(text);
+                        }
+                        instance.text.val(text).attr('value', text).toggleClass('placeholder', !!option.__placeholder);
                     }
-                    if (config.formatter) {
-                        text = config.formatter(text);
-                    }
-                    instance.text.val(text).attr('value', text);
                     return _self.change(instance, option, oldOption);
                 }
                 return false;
@@ -281,6 +283,9 @@
                                 });
                             }
                         });
+                        if (!config.options.length) {
+                            delete style.width;
+                        }
                         config.style = $.extend(true, {}, style, config.style);
                     }
 
@@ -336,7 +341,9 @@
                                 _self.fetch(config.dataKey, keys, function (key) {
                                     option[key] = optionEl.data(key) || $node.data(key);
                                 });
-                                groupOptions.push(option);
+                                if (!config.placeholder || (option[keys.value] && option[keys.text])) {
+                                    groupOptions.push(option);
+                                }
                             });
                             if (isGroup) {
                                 options.push({
@@ -363,7 +370,9 @@
                                     _self.fetch(config.dataKey, keys, function (key) {
                                         option[key] = optionEl.data(key) || $node.data(key);
                                     });
-                                    groupOptions.push(option);
+                                    if (!config.placeholder || (option[keys.value] && option[keys.text])) {
+                                        groupOptions.push(option);
+                                    }
                                 });
                                 if (isGroup) {
                                     options.push({
@@ -385,37 +394,37 @@
             },
             _setPlaceholder: function (config, options, hidePlaceholder) {
                 if (config.placeholder) {
-                    var keys = config.keys,
-                        placeholder = {};
+                    var keys = config.keys, placeholder = {};
 
-                    if (options[0].placeholder) {
+                    if (options.length && options[0].placeholder) {
                         options.shift();
                     }
 
-                    if (!hidePlaceholder && options.length && options[0][keys.text] !== config.placeholder) {
+                    if (!hidePlaceholder && (!options.length || options[0][keys.text] !== config.placeholder)) {
                         placeholder[keys.text] = config.placeholder;
                         placeholder[keys.value] = '';
                         placeholder.selected = false;
-                        placeholder.placeholder = true;
+                        placeholder.__placeholder = true;
                         options.splice(0, 0, placeholder);
                     }
                 }
             },
             _showSelected: function (instance) {
-                var config = instance.config,
-                    selected = instance.wrap.find('dd.on');
+                var config = instance.config, selected = instance.wrap.find('dd.on'), options = config.options || [];
 
                 if (!selected.length) {
                     selected = instance.wrap.find('dd:eq(0)').addClass('on');
                 }
 
-                var text = selected.text();
+                var option = options[instance.selected ? instance.selected.data('select-index') : 0],
+                    text = selected.text();
+
                 if (config.formatter) {
                     text = config.formatter(text);
                 }
 
                 instance.selected = selected;
-                instance.text.val(text).attr('value', text);
+                instance.text.val(text).attr('value', text).toggleClass('placeholder', !!option.__placeholder);
             },
             _setOptions: function (instance, isFilter, hidePlaceholder) {
                 var config = instance.config, options = config.options, hasSelect = false, keys = config.keys;
@@ -459,14 +468,15 @@
             _getOptionsHtml: function (isGroup, groupOptions, keys, filterItem) {
                 var optionHtml = [];
                 if (groupOptions && groupOptions.length) {
-                    var optionsArray = [{
+                    var optionsArray = isGroup ? groupOptions : [{
                         options: groupOptions
                     }];
-                    if (isGroup) {
-                        optionsArray = groupOptions;
-                    }
                     for (var idx = 0; idx < optionsArray.length; idx++) {
                         var optionsObj = optionsArray[idx];
+                        if (optionsObj.__placeholder) {
+                            optionHtml.push(this._getOptionHtml(optionsObj, keys, 0, 0));
+                            continue;
+                        }
                         if (isGroup) {
                             optionHtml.push('<dt>' + (optionsObj.label || (idx + 1)) + '</dt>');
                         }

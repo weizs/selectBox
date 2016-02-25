@@ -70,6 +70,9 @@
 .select-box .select-box-inner input.select-text::-ms-clear {
   display: none;
 }
+.select-box .select-box-inner input.select-text.placeholder {
+  color: #999;
+}
 .select-box.combo .select-box-inner:after {
   width: 20px;
 }

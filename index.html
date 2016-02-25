@@ -5,7 +5,7 @@
     <title>SelectBox</title>
     <link rel="stylesheet" href="css/selectBox.min.css">
     <script type="text/javascript" src="//cdn.bootcss.com/jquery/1.12.0/jquery.min.js"></script>
-    <script type="text/javascript" src="js/jquery.selectBox.min.js"></script>
+    <script type="text/javascript" src="js/jquery.selectBox.js"></script>
 
     <style type="text/css">
         #select1,
@@ -24,10 +24,16 @@
 <body>
 
 <div>
+    <select id="select">
+        <option value=""></option>
+        <option value="1">111111111111111111111</option>
+        <option value="2">2111111111111111111111</option>
+    </select>
+
     <select id="select1">
         <option value="1">测试1-1</option>
         <option value="2">测试1-2</option>
-        <option value="3">测试1-3</option>
+        <option value="3" selected="selected">测试1-3</option>
     </select>
 
     <div id="select2">
@@ -74,9 +80,15 @@
 </div>
 
 <script type="text/javascript">
-    var change = function (data) {
-        console.log('selected:', data);
+    var change = function (data, origin) {
+        console.log('selected:', data, origin);
     };
+    var instance = $('#select').selectBox({
+        placeholder: '请选择',
+//        options: [{text:'1',id:'1'},{text:'2',id:'2'}],
+        change: change
+    });
+
     var instance1 = $('#select1').selectBox({
         change: change
     });
@@ -133,6 +145,7 @@
     });
 
     var instance8 = $('#select8').selectBox({
+        placeholder: '请选择',
         change: change,
         toggleArrow: true,
         options: [

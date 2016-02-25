@@ -7,6 +7,8 @@
 @select-box-border-highlight: #dadbe0;
 //下拉框显示文本样式
 @select-text: #333;
+//下拉框placeholder文本样式
+@select-text-placeholder: #999;
 //下拉框hover样式
 @select-text-hover: #111;
 //下拉框禁用样式
@@ -85,6 +87,9 @@
       outline: none;
       &::-ms-clear {
         display: none;
+      }
+      &.placeholder {
+        color: @select-text-placeholder;
       }
     }
   }
