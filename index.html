@@ -24,12 +24,6 @@
 <body>
 
 <div>
-    <select id="select">
-        <option value=""></option>
-        <option value="1">111111111111111111111</option>
-        <option value="2">2111111111111111111111</option>
-    </select>
-
     <select id="select1">
         <option value="1">测试1-1</option>
         <option value="2">测试1-2</option>
@@ -83,11 +77,6 @@
     var change = function (data, origin) {
         console.log('selected:', data, origin);
     };
-    var instance = $('#select').selectBox({
-        placeholder: '请选择',
-//        options: [{text:'1',id:'1'},{text:'2',id:'2'}],
-        change: change
-    });
 
     var instance1 = $('#select1').selectBox({
         change: change

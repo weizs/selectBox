@@ -269,7 +269,7 @@
             },
             createWrap: function ($node, originSelectSource, config) {
                 var wrap = $node;
-                if (originSelectSource) {
+                if (originSelectSource || $node.is('select')) {
                     //originSelectSource copy style
                     if (config.copyStyle) {
                         var style = {}, styleNames = $.isArray(config.copyStyle) ? config.copyStyle : styleKeys;
@@ -309,17 +309,16 @@
                 var _self = this, $node = config.node, keys = config.keys,
                     isGroup = false, ddSource = false, originSelectSource = false;
 
-                if (!refresh) {
-                    //保留原始信息
-                    instance.originStyle = $node.attr('style');
-                    instance.originClass = $node.attr('class');
-                    instance.sourceHTML = $node.html();
-                }
-
                 //如果没有options，扫描dom生成options
                 if (options.length) {
                     isGroup = !!options[0].label && !options[0][keys.text] && !options[0][keys.value];
                 } else {
+                    if (!refresh) {
+                        //保留原始信息
+                        instance.originStyle = $node.attr('style');
+                        instance.originClass = $node.attr('class');
+                        instance.sourceHTML = $node.html();
+                    }
                     if ($node.is('select')) {
                         $node.css('visibility', 'hidden');
                         var group = $node.find('optgroup');
@@ -463,7 +462,7 @@
                 }
             },
             _getOptionHtml: function (option, keys, index, groupIndex) {
-                return '<dd data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
+                return '<dd'+(option.__placeholder?' data-placeholder':'')+' data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
             },
             _getOptionsHtml: function (isGroup, groupOptions, keys, filterItem) {
                 var optionHtml = [];

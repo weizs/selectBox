@@ -121,6 +121,9 @@
 .select-box dl.group dd {
   padding: 0 6px 0 1.5em;
 }
+.select-box dl.group dd[data-placeholder] {
+  padding-left: 6px;
+}
 .select-box.disabled {
   background: #e6e7ec;
 }
