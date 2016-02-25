@@ -336,7 +336,7 @@
                                     optionEl = optionEls.eq(i);
                                 option[keys.text] = optionEl.text();
                                 option[keys.value] = optionEl.attr('value') || '';
-                                option.selected = optionEl.prop('selected');
+                                option.selected = i && optionEl.prop('selected');
                                 _self.fetch(config.dataKey, keys, function (key) {
                                     option[key] = optionEl.data(key) || $node.data(key);
                                 });
@@ -365,7 +365,7 @@
                                         optionEl = dd.eq(i);
                                     option[keys.text] = optionEl.text();
                                     option[keys.value] = optionEl.data(keys.value) || '';
-                                    option.selected = !!optionEl.data('selected');
+                                    option.selected = i && !!optionEl.data('selected');
                                     _self.fetch(config.dataKey, keys, function (key) {
                                         option[key] = optionEl.data(key) || $node.data(key);
                                     });
@@ -415,15 +415,14 @@
                     selected = instance.wrap.find('dd:eq(0)').addClass('on');
                 }
 
-                var option = options[instance.selected ? instance.selected.data('select-index') : 0],
-                    text = selected.text();
+                var option = options[instance.selected ? instance.selected.data('select-index') : 0], text = selected.text();
 
                 if (config.formatter) {
                     text = config.formatter(text);
                 }
 
                 instance.selected = selected;
-                instance.text.val(text).attr('value', text).toggleClass('placeholder', !!option.__placeholder);
+                instance.text.val(text).attr('value', text).toggleClass('placeholder', text === config.placeholder && option.__placeholder);
             },
             _setOptions: function (instance, isFilter, hidePlaceholder) {
                 var config = instance.config, options = config.options, hasSelect = false, keys = config.keys;
@@ -462,7 +461,7 @@
                 }
             },
             _getOptionHtml: function (option, keys, index, groupIndex) {
-                return '<dd'+(option.__placeholder?' data-placeholder':'')+' data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
+                return '<dd' + (option.__placeholder ? ' data-placeholder' : '') + ' data-group-index="' + (groupIndex || 0) + '" data-select-index="' + index + '" data-id="' + option[keys.value] + '"' + (option.selected ? ' class="on"' : '') + '>' + option[keys.text] + '</dd>';
             },
             _getOptionsHtml: function (isGroup, groupOptions, keys, filterItem) {
                 var optionHtml = [];
