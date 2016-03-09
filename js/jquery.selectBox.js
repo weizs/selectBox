@@ -524,10 +524,10 @@
                  * @returns {*}
                  */
                 methods.val = function (val) {
-                    if (val) {
-                        return _self.setSelected(instance, val);
-                    } else {
+                    if ($.type(val)==='undefined') {
                         return _self.getSelected(instance);
+                    } else {
+                        return _self.setSelected(instance, val);
                     }
                 };
                 /**
